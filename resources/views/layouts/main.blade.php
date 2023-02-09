@@ -160,9 +160,9 @@
             <div class="container header-in">
                 <div class="row">
                     <div class="col-xl-2 col-lg-2">
-                        <a id="logo" href="https://www.takatuf.om/en/" class="d-inline-block margin-top-20px">
+                        <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px">
 
-                            <img src="{{ asset('assets/img/Takatuf-Logo.png') }}" alt="" width="100">
+                            <img src="{{ asset('assets/img/logo-1.png') }}" alt="" height="40">
 
                         </a>
 
@@ -202,12 +202,12 @@
                         </div>
                     </div>
                     <div class="col-xl-2 col-lg-2">
-                        <sup class="text-capitalize m-2">powered by</sup>
+                        {{-- <sup class="text-capitalize m-2">powered by</sup>
                         <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px">
 
                             <img src="{{ asset('assets/img/logo-1.png') }}" alt="" height="40">
 
-                        </a>
+                        </a> --}}
 
 
                     </div>
@@ -243,17 +243,17 @@
             <div class="row">
                 <div class="col-8 col-lg-10 col-md-10 wow fadeInUp">
                     <div class="row">
-                        <div class="col-6 logo margin-bottom-10px text-right">
+                        {{-- <div class="col-6 logo margin-bottom-10px text-right">
                             <a id="logo" href="https://www.takatuf.om/en/" class="d-inline-block margin-top-20px">
 
                                 <img src="{{ asset('assets/img/Takatuf-Logo.png') }}" alt="" width="100">
 
                             </a>
 
-                        </div>
+                        </div> --}}
                         <div class="col-6 logo margin-bottom-10px text-right">
-                            <a id="logo" href="https://www.takatuf.om/en/" class="d-inline-block margin-top-20px"><img
-                                    src="/assets/img/logo.png" height="50" alt=""></a>
+                            <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px"><img
+                                    src="{{ asset('assets/img/logo.png') }}" height="50" alt=""></a>
                         </div>
                     </div>
                     <!-- // Social -->
