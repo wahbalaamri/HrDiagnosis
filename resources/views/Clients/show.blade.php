@@ -84,14 +84,14 @@
                     <table id="Emails-data-table" class="table table-bordered data-table">
                         <thead>
                             <tr>
-                                <td colspan="4"> <a href="#" id="CreateEmailUrl"
+                                <td colspan="5"> <a href="#" id="CreateEmailUrl"
                                         class="btn btn-sm btn-success float-end">Add Emails</a></td>
                             </tr>
                             <tr>
                                 <th>{{ __('#') }}</th>
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Type') }}</th>
-
+                                <th>{{ __('Send Survey Individually') }}</th>
                                 <th>{{ __('Action') }}</th>
                             </tr>
                         </thead>
@@ -205,6 +205,12 @@ $("#GetSurveys").click(function(){
                 {
                     data: 'EmployeeType',
                     name: 'EmployeeType'
+                },
+                {
+                    data: 'SendSurvey',
+                    name: 'SendSurvey',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'action',

@@ -134,9 +134,9 @@ class EmailsController extends Controller
             // Excel::toArray([],$filePath);
             $array = array();
             $tss = Excel::toArray($array, $request->file('EmailFile'));
-            Log::alert($tss[0]);
+            //Log::alert($tss[0]);
             $emails = Excel::toArray([], $request->file('EmailFile'));
-            Log::alert($request->AddedBy);
+            // Log::alert($request->AddedBy);
             foreach ($emails[0] as $key => $value) {
 
                 if (str_contains($value[0], '@')) {
@@ -260,18 +260,22 @@ class EmailsController extends Controller
     }
     public function sendTheSurvey(Request $request)
     {
-        Log::alert($request->reminder);
-        if ($request->reminder == 0)
+        //  Log::alert($request->reminder);
+        if($request->reminder==2)
+        {
+            $emails = Emails::where('id',$request->respondentID)->get();
+        }
+        elseif ($request->reminder == 0)
             $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id]])->get();
         else {
             $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id]])
                 ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
                 ->get();
-            Log::info($emails);
+            //  Log::info($emails);
         }
-        Log::alert($emails);
+        //  Log::alert($emails);
         foreach ($emails as $key => $value) {
-            Log::alert($value);
+            //   Log::alert($value);
             $data = [
                 'email' => $value->Email,
                 'id' => $value->id,
@@ -280,7 +284,7 @@ class EmailsController extends Controller
                 'body_footer' => $request->body_footer,
             ];
             Mail::to($value->Email)->send(new SendSurvey($data));
-            Log::alert($data);
+            // Log::alert($data);
             // sleep(2);
         }
         return redirect()->route('clients.show', $request->client_id);
@@ -296,6 +300,19 @@ class EmailsController extends Controller
         ];
         return view('Emails.CreateEmail')->with($data);
     }
+    public function sendIndividual(Request $request, $ID)
+    {
+        $email = Emails::find($ID);
+        $data = [
+            'clients' => \App\Models\Clients::all(),
+            'surveys' => \App\Models\Surveys::all(),
+            'surveyId' => $email->SurveyId,
+            'clientId' => $email->ClientId,
+            'reminder' => 2,
+            'respondentID' => $email->id
+        ];
+        return view('Emails.CreateEmail')->with($data);
+    }
 
     public function getEmails($ClientID, $SurveyID)
     {
@@ -304,12 +321,21 @@ class EmailsController extends Controller
         return DataTables::of($emails)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
+                $email_res = SurveyAnswers::where('AnsweredBy', $row->id)->get();
                 $btn = '<a href="' . route('emails.edit', $row->id) . '" class="btn btn-sm m-1 btn-primary"><i class="fa fa-edit"></i></a>';
-                $btn .= '<form action="' . route('emails.destroy', $row->id) . '" method="POST" class="delete_form" style="display:inline">';
-                $btn .= '<input type="hidden" name="_method" value="DELETE">';
-                $btn .= csrf_field();
-                $btn .= '<button type="submit" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></button>';
-                $btn .= '</form>';
+                if (count($email_res) == 0) {
+                    $btn .= '<form action="' . route('emails.destroy', $row->id) . '" method="POST" class="delete_form" style="display:inline">';
+                    $btn .= '<input type="hidden" name="_method" value="DELETE">';
+                    $btn .= csrf_field();
+                    $btn .= '<button type="submit" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></button>';
+                    $btn .= '</form>';
+                }
+                return $btn;
+            })
+            ->addColumn('SendSurvey', function ($row) {
+
+                $btn = '<a href="' . route('emails.sendIndividual', $row->id) . '" class="btn btn-sm m-1 btn-primary">Send Individually</a>';
+
                 return $btn;
             })
             ->editColumn('EmployeeType', function ($row) {
@@ -324,6 +350,7 @@ class EmailsController extends Controller
                         return 'Others';
                 }
             })
+            ->rawColumns(['SendSurvey','action'])
             ->make(true);
     }
     public function CreateNewEmails($ClientID, $SurveyID)

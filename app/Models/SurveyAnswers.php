@@ -32,6 +32,15 @@ class SurveyAnswers extends Model
 
     public function surveys()
     {
-        return $this->belongsTo(Surveys::class);
+        return $this->belongsTo(Surveys::class,'SurveyId');
+    }
+    public function questions()
+    {
+        return $this->belongsTo(PracticeQuestions::class,'QuestionId');
+    }
+    // belongsto Emails
+    public function email()
+    {
+        return $this->belongsTo(Emails::class,'AnsweredBy');
     }
 }

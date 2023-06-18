@@ -162,7 +162,7 @@
                     <div class="col-xl-2 col-lg-2">
                         <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px">
 
-                            <img src="{{ asset('assets/img/logo-1.png') }}" alt="" height="40">
+                            <img src="{{ asset('assets/img/logo-1.png') }}" alt="" width="">
 
                         </a>
 
@@ -201,16 +201,16 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-2">
-                        {{-- <sup class="text-capitalize m-2">powered by</sup>
+                    {{-- <div class="col-xl-2 col-lg-2">
+                        <sup class="text-capitalize m-2">powered by</sup>
                         <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px">
 
                             <img src="{{ asset('assets/img/logo-1.png') }}" alt="" height="40">
 
-                        </a> --}}
+                        </a>
 
 
-                    </div>
+                    </div> --}}
                     {{--
                     <!-- // Social -->
                     <div class="col-xl-2 col-lg-2 padding-social">
@@ -243,18 +243,18 @@
             <div class="row">
                 <div class="col-8 col-lg-10 col-md-10 wow fadeInUp">
                     <div class="row">
-                        {{-- <div class="col-6 logo margin-bottom-10px text-right">
-                            <a id="logo" href="https://www.takatuf.om/en/" class="d-inline-block margin-top-20px">
+                        <div class="col-6 logo margin-bottom-10px text-right">
+                            <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px">
 
-                                <img src="{{ asset('assets/img/Takatuf-Logo.png') }}" alt="" width="100">
+                                <img src="{{ asset('assets/img/logo.png') }}" alt="" width="">
 
                             </a>
 
-                        </div> --}}
-                        <div class="col-6 logo margin-bottom-10px text-right">
+                        </div>
+                        {{-- <div class="col-6 logo margin-bottom-10px text-right">
                             <a id="logo" href="https://www.hrfactoryapp.com/" class="d-inline-block margin-top-20px"><img
                                     src="{{ asset('assets/img/logo.png') }}" height="50" alt=""></a>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- // Social -->
                 </div>
@@ -277,12 +277,12 @@
                         @endif
 
                     </ul>
-                    <a class="text-white" href="{{-- tel:+96879178007 --}}" dir="ltr"><i class="fas fa-phone"></i>
-                        {{-- &nbsp;
-                        +968 7917 8007 --}}
+                    <a class="text-white" href="tel:+96879178007" dir="ltr"><i class="fas fa-phone"></i>
+                        &nbsp;
+                        +968 7917 8007
                     </a><br />
-                    <a class="text-white" href="{{-- mailto:care@hrfactoryapp.com --}}" dir="ltr"><i
-                            class="fas fa-envelope"></i>&nbsp; {{-- care@hrfactoryapp.com --}}</a>
+                    <a class="text-white" href="mailto:care@hrfactoryapp.com" dir="ltr"><i
+                            class="fas fa-envelope"></i>&nbsp; care@hrfactoryapp.com</a>
                 </div>
             </div>
         </div>

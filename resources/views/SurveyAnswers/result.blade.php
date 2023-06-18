@@ -13,38 +13,125 @@
             @include('layouts.sidebar')
         </div>
         <div class="col-10" id="finalResult">
-            <div id="Function" class="card" style="font-family: emoji;letter-spacing: 0.065rem;">
+            <div class="card">
+                {{-- card header --}}
+                <div class="card-header">
+                    <h3>Survey Answers</h3>
+                </div>
+                {{-- card body --}}
+                <div class="card-body text-center">
+                    {{-- survey divs --}}
+                    <div class="w-50">
+                        @if($Resp_overAll_res>0)
+                        <div class="col-5 text-end function-lable mr-3">Total Answers {{ $overAll_res }} out of {{
+                            $Resp_overAll_res }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($overAll_res/$Resp_overAll_res)<0.5) bg-danger @elseif(($overAll_res/$Resp_overAll_res)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($overAll_res/$Resp_overAll_res)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($overAll_res/$Resp_overAll_res)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($overAll_res/$Resp_overAll_res)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_leadersResp>0)
+                        <div class="col-5 text-end function-lable mr-3">Total Leaders Answers {{ $leaders_res }} out of
+                            {{ $prop_leadersResp }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($leaders_res/$prop_leadersResp)<0.5) bg-danger @elseif(($leaders_res/$prop_leadersResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($leaders_res/$prop_leadersResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($leaders_res/$prop_leadersResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($leaders_res/$prop_leadersResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_hrResp>0)
+                        <div class="col-5 text-end function-lable mr-3">Total HR Answers {{ $hr_res }} out of {{
+                            $prop_hrResp }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($hr_res/$prop_hrResp)<0.5) bg-danger @elseif(($hr_res/$prop_hrResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar" style="width: {{ ($hr_res/$prop_hrResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($hr_res/$prop_hrResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($hr_res/$prop_hrResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_empResp>0)
+                        <div class="col-5 text-end function-lable mr-3">Total Employee Answers {{ $emp_res }} out of {{
+                            $prop_empResp }}</div>
+
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($emp_res/$prop_empResp)<0.5) bg-danger @elseif(($emp_res/$prop_empResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($emp_res/$prop_empResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($emp_res/$prop_empResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($emp_res/$prop_empResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        {{-- end survey divs --}}
+                    </div>
+                </div>
+            </div>
+            <div id="Function" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
                 <div class="card-header">
                     <h3 class="card-title">Results</h3>
                 </div>
                 <div class="card-body text-capitalize">
-
-                    <div class="col-{{ count($functions) }} text-start h3 text-white p-3" style="background-color: #376092;border-radius: 45px 45px 45px 45px;width: 89%; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
+                    <div class="row">
+                        <div class="col-1" style="max-width: 45px;"></div>
+                        <div class="col-11">
+                            <div class="col-{{ count($functions) }} text-start h3 text-white p-3" style="background-color: #376092;border-radius: 45px 45px 45px 45px;width: 89%; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
                         box-shadow: 5px 5px 20px 5px #ABABAB;">Key functions
-                    </div>
-                    <div class="row  padding-left-10px">
-                        @foreach ($functions as $function )
-                        <div class="text-center text-white m-1" style="background-color: #376092; width:10.5%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                        box-shadow: 5px 5px 20px 5px #ABABAB; font-size: 0.79rem">
-                            {{ $function->FunctionTitle }}
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="row" style="width: 100%">
-                        @foreach ($functions as $function )
-                        <?php $firstofFirstLoop= $loop->first ; ?>
-                        <div class="col-1 m-1 justify-content-center" style="width: 10.5%; font-size: 0.79rem">
-                            @foreach( $overall_Practices as $overall_Practice)
-                            @if ( $overall_Practice['function_id'] == $function->id)
-                            <div class="text-center @if(!$loop->first) mt-1 @endif @if($firstofFirstLoop) pl-1 pr-1 pb-1 @else p-2 m-1 @endif @if($overall_Practice['weight']<=0.6) bg-danger text-white @elseif (($overall_Practice['weight']>0.6)&&($overall_Practice['weight']<=0.8)) bg-warning text-black @else bg-success text-white @endif"
-                                style=" width:125%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                                box-shadow: 5px 5px 20px 5px #ABABAB;">
-                                {{ $overall_Practice['name'] }} {{-- {{ $overall_Practice['weight'] }} --}}
                             </div>
-                            @endif
-                            @endforeach
                         </div>
-                        @endforeach
+                    </div>
+                    <div class="row">
+                        <div class="col-1" style="max-width: 45px;"></div>
+                        <div class="col-11">
+                            <div class="row  padding-left-10px">
+                                @foreach ($functions as $function )
+                                <div class="text-center text-white m-1" style="background-color: #376092; width:10.5%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
+                        box-shadow: 5px 5px 20px 5px #ABABAB; font-size: 0.79rem">
+                                    {{ $function->FunctionTitle }}
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1" style="background-color: #DCE6F2;    background-color: #DCE6F2;
+                        writing-mode: vertical-lr;
+                        transform: rotate(180deg);
+                        min-width: 19px;
+                        max-width: 45px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;color:#376092; font-size: 1.5rem; font-weight: bold">Practices</div>
+                        <div class="col-11">
+                            <div class="row" style="width: 100%">
+                                @foreach ($functions as $function )
+                                <?php $firstofFirstLoop= $loop->first ; ?>
+                                <div class="col-1 m-1 justify-content-center pb-1 pt-1"
+                                    style="width: 10.5%; font-size: 0.79rem">
+                                    @foreach( $overall_Practices as $overall_Practice)
+                                    @if ( $overall_Practice['function_id'] == $function->id)
+                                    <div class="text-center @if(!$loop->first) mt-1 p-2 @endif @if($firstofFirstLoop) p-2 @else p-2 m-1 @endif @if($overall_Practice['weightz']<=0.6) bg-danger text-white @elseif (($overall_Practice['weightz']>0.6)&&($overall_Practice['weightz']<=0.8)) bg-warning text-black @else bg-success text-white @endif"
+                                        style=" width:125%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
+                                box-shadow: 5px 5px 20px 5px #ABABAB;">
+                                        {{ $overall_Practice['name'] }} {{-- {{ $overall_Practice['weightz'] }} --}}
+                                    </div>
+                                    @endif
+                                    @endforeach
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,13 +150,13 @@
                                     <div class="circle">
 
                                         <div class="mask half">
-                                            <div class="fill-{{ $overallResult }}"></div>
+                                            <div class="fill-{{ $overallResultz }}"></div>
                                         </div>
 
-                                        <div class="mask full-{{ $overallResult }}">
-                                            <div class="fill-{{ $overallResult }}"></div>
+                                        <div class="mask full-{{ $overallResultz }}">
+                                            <div class="fill-{{ $overallResultz }}"></div>
                                         </div>
-                                        <div class="inside-circle"> {{ $overallResult }}%<p>Performance score</p>
+                                        <div class="inside-circle"> {{ $overallResultz }}%<p>Performance score</p>
                                         </div>
 
 
@@ -82,40 +169,51 @@
                         </div>
                         <div class="col-4 m-1 rounded text-center h3 p-3"
                             style="background-color: #DCE6F2 ; color:#376092 !important;">Key improvement areas
+                            <?php $hasWPoints=false; ?>
+                            @for ($i=0; $i<count($asc_perform); $i++) <div class="mt-5 text-start">
 
-                            @for ($i=0; $i<5; $i++) <div class="mt-5 text-start">
-                                <span class="h5"> {{ $asc_perform[$i]['function'] }}</span>
-
-                                <div class="progress" style="height: 31px">
-                                    <div class="progress-bar
-                                    @if($asc_perform[$i]['performance']<=60) bg-danger @elseif($asc_perform[$i]['performance']>60 && $asc_perform[$i]['performance']<80) bg-warning @else bg-success @endif"
-                                        role="progressbar"
-                                        style="width: {{ $asc_perform[$i]['performance']  }}%; font-size: 1rem"
-                                        aria-valuenow="{{ $asc_perform[$i]['performance']  }}" aria-valuemin="0"
-                                        aria-valuemax="100">{{ $asc_perform[$i]['performance'] }}%
+                                @if($asc_perform[$i]['performancez']<=60) <span class="h5"> {{
+                                    $asc_perform[$i]['function'] }}</span>
+                                    <div class="progress" style="height: 31px">
+                                        <div class="progress-bar
+                                    @if($asc_perform[$i]['performancez']<=60) bg-danger @elseif($asc_perform[$i]['performancez']>60 && $asc_perform[$i]['performancez']<80) bg-warning @else bg-success @endif"
+                                            role="progressbar"
+                                            style="width: {{ $asc_perform[$i]['performancez']  }}%; font-size: 1rem;min-width: 2em;"
+                                            aria-valuenow="{{ $asc_perform[$i]['performancez']  }}" aria-valuemin="2"
+                                            aria-valuemax="100">{{ $asc_perform[$i]['performancez'] }}%
+                                        </div>
                                     </div>
-                                </div>
+                                    <?php $hasWPoints=true; ?>
+                                    @endif
                         </div>
 
                         @endfor
-
+                        @if (!$hasWPoints)
+                        <span class="h5" style="font-size: 2rem"> NIL</span>
+                        @endif
                     </div>
                     <div class="col-4 m-1 rounded text-center h3 p-3"
                         style="background-color: #DCE6F2 ; color:#376092 !important;">Strength Areas
-                        @for($i=(count($asc_perform)-1); $i>=(count($asc_perform)-3); $i--) <div
+                        <?php $strengthcounter = 0; ?>
+                        @for($i=(count($asc_perform)-1); $i>=0; $i--) <div
                             class="mt-5 text-start">
                             @if($asc_perform[$i]['performance'] >80)
+                            <?php $strengthcounter++; ?>
                             <span class="h5"> {{ $asc_perform[$i]['function'] }}</span>
                             <div class="progress" style="height: 31px">
-                                <div class="progress-bar @if($asc_perform[$i]['performance']<=60) bg-danger @elseif($asc_perform[$i]['performance']>60 && $asc_perform[$i]['performance']<80) bg-warning @else bg-success @endif"
+                                <div class="progress-bar @if($asc_perform[$i]['performancez']<=60) bg-danger @elseif($asc_perform[$i]['performancez']>60 && $asc_perform[$i]['performancez']<80) bg-warning @else bg-success @endif"
                                     role="progressbar"
-                                    style="width: {{ $asc_perform[$i]['performance']  }}%; font-size: 1rem"
-                                    aria-valuenow="{{ $asc_perform[$i]['performance']  }}" aria-valuemin="0"
-                                    aria-valuemax="100">{{ $asc_perform[$i]['performance'] }}%</div>
+                                    style="width: {{ $asc_perform[$i]['performancez']  }}%; font-size: 1rem;min-width: 2em;"
+                                    aria-valuenow="{{ $asc_perform[$i]['performancez']  }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ $asc_perform[$i]['performancez'] }}%</div>
                             </div>
                             @endif
+
                         </div>
                         @endfor
+                        @if ($strengthcounter==0)
+                        <span class="h5" style="font-size: 2rem"> NIL</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -147,11 +245,13 @@
                     <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
                     <div class="col-9 text-start function-progress">
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
                     </div>
                     @endforeach
@@ -178,13 +278,19 @@
 
                     <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
                     <div class="col-9 text-start function-progress">
+                        {{-- @if($performence['performance']>0) --}}
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
+                        {{-- @else
+                        not applicable
+                        @endif --}}
                     </div>
                     @endforeach
                     {{-- <div class="col-3 text-end function-lable">Function 6</div>
@@ -266,13 +372,19 @@
 
                     <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
                     <div class="col-9 text-start function-progress">
+                        @if($performence['performance']>0)
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
+                        @else
+                        not applicable
+                        @endif
                     </div>
                     @endforeach
 
@@ -327,7 +439,7 @@
                             @if ($j == 0)
                             <ul>
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance'] <=0.6)
+                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performancez'] <=0.6)
                                     <li class="text-white">{{ $pri['function'] }}
                                     </li>
                                     @endif
@@ -338,8 +450,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance']> 0.6
-                                    && $pri['performance'] <= 0.8) <li class="text-white">{{ $pri['function'] }}
+                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performancez']> 0.6
+                                    && $pri['performancez'] <= 0.8) <li class="text-white">{{ $pri['function'] }}
                                         </li>
                                         @endif
                                         @endif
@@ -351,8 +463,8 @@
 
                                 @foreach ($priorities as $pri)
                                 ffff
-                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.6) <li
-                                    class="text-white">{{ $pri['function'] }}</li>
+                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez'] <=0.6)
+                                    <li class="text-white">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -363,8 +475,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.6) <li
-                                    class="text-white">{{ $pri['function'] }}</li>
+                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez'] <=0.6)
+                                    <li class="text-white">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -382,8 +494,8 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance']> 0.6 &&
-                                $pri['performance'] <= 0.8) <li class="text-black">{{ $pri['function'] }}</li>
+                            @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez']> 0.6 &&
+                                $pri['performancez'] <= 0.8) <li class="text-black">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -394,7 +506,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance'] <=0.6) <li class="text-black">
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez'] <=0.6) <li class="text-black">
                                 {{$pri['function'] }}</li>
                                 @endif
                                 @endif
@@ -405,7 +517,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance']> 0.6 && $pri['performance'] <= 0.8)
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez']> 0.6 && $pri['performancez'] <= 0.8)
                                     <li class="text-black">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
@@ -424,7 +536,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.8 && $pri['priority'] <= 1) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] >0.8 && $pri['priority'] <= 1) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}</li>
                                 @endif
                                 @endif
@@ -437,7 +549,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.6 && $pri['priority'] < 0.8) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] >0.6 && $pri['priority'] < 0.8) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}
                                 </li>
                                 @endif
@@ -451,7 +563,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}
                                 </li>
                                 @endif
@@ -504,8 +616,8 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-12">
-                <div class="chart-container">
+            <div class="d-flex justify-content-center">
+                <div class="chart-container w-75">
                     <canvas id="myChart" width="400" height="400"></canvas>
                 </div>
             </div>
@@ -565,10 +677,11 @@
                 </span>
             </div>
             @foreach ($asc_perform as $perfomr)
-            <div class="m-1 @if($perfomr['performance']<=60) bg-danger text-white @elseif($perfomr['performance']>80) bg-success text-white @else bg-warning @endif"
+            <div class="m-1 @if($perfomr['performancez']<=60) bg-danger text-white @elseif($perfomr['performancez']>80) bg-success text-white @else bg-warning @endif"
                 style="width: 10.4% !important; font-size: 0.8rem border-radius: 10px;
                 ">
-                @if($perfomr['performance']<=60) Critical to improve @elseif($perfomr['performance']>80) No Improvement
+                @if($perfomr['performancez']<=60) Critical to improve @elseif($perfomr['performancez']>80) No
+                    Improvement
                     Needed
                     @else Need to improve
                     @endif
@@ -598,7 +711,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/LeadersIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $leader['performance'] }}% <br>
+                    {{ $leader['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -610,7 +723,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/HRIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $hr['performance'] }}% <br>
+                    {{ $hr['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -622,7 +735,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/EmployeIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $emp['performance'] }}% <br>
+                    {{ $emp['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -750,12 +863,15 @@
 
 <script>
     Labels= @json($function_Lables);
-    Leaders= @json($leaders_perform_only);
-    hr=@json($hr_perform_only);
+    Leaders= @json($leaders_perform_onlyz);
+    hr=@json($hr_perform_onlyz);
+    // Leaders= @json($leaders_perform_only);
+    // hr=@json($hr_perform_only);
     const ctx = document.getElementById('myChart');
-
+console.log(hr);
+console.log(Leaders);
 const myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
         labels: Labels,
         datasets: [

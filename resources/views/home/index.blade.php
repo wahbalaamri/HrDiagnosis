@@ -192,9 +192,13 @@
                                     <?php $color='#eb6323'; ?>
                                     @endif
                                     @if($plan->PaymentMethod==1)
-                                    <a class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2" href="{{ route('FreeSurvey') }}"
+                                    {{-- <a class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2"
+                                        href="{{ route('FreeSurvey') }}"
                                         style="background-color: {{ $color }}; font-size: 1.3rem;margin-top: 4.8rem !important;"><b>Get
-                                            Started</b></a>
+                                            Started</b></a> --}}
+                                    <button id="FreeButton" class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2"
+                                        style="background-color: {{ $color }}; font-size: 1.3rem;margin-top: 4.8rem !important;"><b>Get
+                                            Started</b></button>
                                     {{-- @elseif($loop->index==1)
                                     <button class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2" data-bs-toggle="modal"
                                         onclick="RenderModal('{{ $plan->id }}', 'Request Plan 2 Service')"
@@ -242,51 +246,82 @@
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #f7f7f7;height: 4rem;">
-
+                                    <?php $msg='';
+$des="" ?>
                                     @switch($plan->Audience)
                                     @case(1)
-                                    Only HR Factory App Members
+                                    <?php $msg="HRFactoryApp Members, CLICK";
+                                    $des="Only HR Factory App Members" ?>
+
                                     @break
 
                                     @case(2)
-                                    Only HR Employees
+                                    <?php $msg="Only HR Employees, CLICK";
+                                    $des="Only HR Employees"; ?>
+
                                     @break
 
                                     @case(3)
-                                    Only Employees
+                                    <?php $msg="Only Employees, CLICK";
+                                    $des="Only Employees" ?>
+
                                     @break
 
                                     @case(4)
-                                    Only Managers
+                                    <?php $msg="Only Managers, CLICK";
+                                    $des="Only Managers" ?>
+
                                     @break
 
                                     @case(5)
-                                    Only HR Employees & Employees
+                                    <?php $msg="Only HR Employees & Employees, CLICK";
+                                    $des="Only HR Employees & Employees" ?>
+
                                     @break
 
                                     @case(6)
-                                    Only Managers & Employees
+                                    <?php $msg="Only Managers & Employees, CLICK";
+                                    $des="Only Managers & Employees" ?>
+
                                     @break
 
                                     @case(7)
-                                    Only Managers & HR Employees
+                                    <?php $msg="Only Managers & HR Employees, CLICK";
+                                    $des="Only Managers & HR Employees" ?>
+
                                     @break
 
                                     @case(8)
-                                    Only Managers, HR Employees & Employees
+                                    <?php $msg="Managers, HR Employees & Employees, CLICK";
+                                    $des="Only Managers, HR Employees & Employees" ?>
+
                                     @break
 
                                     @case(9)
-                                    All Employees
+                                    <?php $msg="Selected Employee, CLICK";
+                                    $des="Managers, HR team, Selected Employees" ?>
+
+
                                     @break
 
                                     @case(10)
-                                    Public
+                                    <?php $msg="Public, CLICK";
+                                    $des="Public" ?>
+
                                     @break
 
                                     @default
                                     Default case...
                                     @endswitch
+                                    <button type="button" class="btn btn-sm p-0 m-0" data-toggle="popover"
+                                        title="Respondent" data-popover-content="#Employee{{$loop->iteration}}">{{ $msg
+                                        }}</button>
+                                    <div id="Employee{{$loop->iteration}}" style="display:none;">
+                                        <div class="popover-body">
+
+                                            {{ $des }}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #ffffff;">
@@ -557,6 +592,8 @@
 @endsection
 {{-- scripts --}}
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(function () {
   $('[data-toggle="popover"]').popover({
@@ -579,6 +616,13 @@ function SetUpthis(controle){
                 $('#requestservice').modal('show');
             }
             abcsd(2);
+            $("#FreeButton").click(function(){
+                Swal.fire({
+  icon: 'error',
+  title: 'Coming Soon',
+  text: 'Free Survey.. Coming Soon',
+})
+            });
         });
 
 

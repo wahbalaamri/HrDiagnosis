@@ -23,7 +23,7 @@ class QuestionnairController extends Controller
         }
         $answerBythisEmail = SurveyAnswers::where('AnsweredBy', $id)->count();
         if ($answerBythisEmail > 0) {
-            return view('errors.404');
+            return view('errors.completed');
         }
         $SurveyId = $emailDetails->SurveyId;
         $survey = Surveys::where([['id', $SurveyId], ['SurveyStat', '=', true]])->first();
@@ -53,6 +53,7 @@ class QuestionnairController extends Controller
         }
         $data = [
             'functions' => $functions,
+            'functionsCount' =>count($functions),
             'user_type' => $user_type,
             'can_ansewer_to_priorities' => $can_ansewer_to_priorities,
             'SurveyId' => $SurveyId,
@@ -102,7 +103,7 @@ class QuestionnairController extends Controller
                     $Priority_answer->AnsweredBy = $EmailId;
                     $Priority_answer->QuestionId = $value['function'];
                     $Priority_answer->AnswerValue = $value['priority'];
-                    Log::info($Priority_answer);
+                //    Log::info($Priority_answer);
                     $Priority_answer->save();
                 }
             }
@@ -125,6 +126,7 @@ class QuestionnairController extends Controller
             'SurveyId' => null,
             'email_id' => null,
             'plan_id' => $free_plan->id,
+            'functionsCount'=>count($functions),
         ];
         return view('Questions.index')->with($data);
     }

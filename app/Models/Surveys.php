@@ -39,7 +39,7 @@ class Surveys extends Model
 
     public function surveyAnswers()
     {
-        return $this->hasMany(SurveyAnswers::class);
+        return $this->hasMany(SurveyAnswers::class,'SurveyId','id');
     }
 
     public function prioritiesAnswers()

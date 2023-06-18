@@ -7,6 +7,7 @@
     type="text/css" />
 @endpush
 @section('content')
+
 <div id="smartwizard">
     <ul class="nav">
         <?php $x = 1; ?>
@@ -280,12 +281,15 @@
         <div id="step-{{ $i }}" class="tab-pane" role="tabpanel" aria-labelledby="step-{{ $i }}">
             <div class="Qcontainer">
                 <?php $coun = 1; ?>
-                <p style="font-size: 2.0rem; letter-spacing: 4px" class="h2 text-warning text-center">1 is Low
+                {{-- <p style="font-size: 2.0rem; letter-spacing: 4px" class="h2 text-warning text-center">1 is Low
                     Priority and 3 is high Priority</p>
-                </p>
-                <p style="font-size: 0.9rem; letter-spacing: 2px" class="h2 text-info text-center">Please select
+                </p> --}}
+                <p style="font-size: 2rem; letter-spacing: 2px" class="h2 text-info text-center">Please select
                     two high priorities, and three medium priorities, and the remaining
                     priorities are low priorities.
+                </p>
+                <p style="font-size: 1.3rem; letter-spacing: 2px" class="h2 text-info text-center">
+                    H: High , M: Medium , L: Low.
                 </p>
                 @foreach ($functions as $f)
                 <p style="font-size: 1.4rem;">{{ $coun }}.
@@ -294,19 +298,19 @@
 
                 <div id="{{ $f->id }}" class="rb function" data-QId="{{ $f->id }}" data-answer="notset"
                     data-fanswer="notset" data-type="f">
-                    <div class="tab" data-value="1">
+                    <div class="tab" data-value="1" id="one{{ $coun }}">
                         <div class="spot">
-                            <span class="txt">1</span>
+                            <span class="txt">L</span>
                         </div>
                     </div>
                     <div class="tab" data-value="2" id="two{{ $coun }}">
                         <div class="spot">
-                            <span class="txt">2</span>
+                            <span class="txt">M</span>
                         </div>
                     </div>
                     <div class="tab" data-value="3" id="three{{ $coun }}">
                         <div class="spot">
-                            <span class="txt">3</span>
+                            <span class="txt">H</span>
                         </div>
                     </div>
                 </div>
@@ -556,6 +560,8 @@
                 twoAnswered = document.querySelectorAll('[data-fanswer="2"]');
                 oneAnswered =
                     document.querySelectorAll('[data-fanswer="1"]');
+                    var functionscount=parseInt('{{ $functionsCount }}');
+
                 if (threeAnswered.length == 2) {
                     $.each(functions, function(key, value) {
                         ele = document.getElementById(value.id);
@@ -587,6 +593,23 @@
                     $.each(functions, function(key, value) {
 
                         $(`#two${key+1}`).css("pointer-events", "");
+
+                    });
+                }
+                if (oneAnswered.length >= (functionscount-5)) {
+                    $.each(functions, function(key, value) {
+                        ele = document.getElementById(value.id);
+
+                        if (ele.getAttribute('data-fanswer') == "1") {
+
+                        } else {
+                            $(`#one${key+1}`).css("pointer-events", "none");
+                        }
+                    });
+                } else {
+                    $.each(functions, function(key, value) {
+
+                        $(`#one${key+1}`).css("pointer-events", "");
 
                     });
                 }

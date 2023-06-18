@@ -22,7 +22,7 @@ class PartnerShipPlansController extends Controller
      */
     public function index(Request $request)
     {
-
+        Log::alert(request()->getHost());
         $partnerShipPlans = PartnerShipPlans::all();
         $plans = $this->GetRemotPlans();
         return view('PartnerShipPlans.index', compact('partnerShipPlans', 'plans'));
@@ -119,6 +119,7 @@ class PartnerShipPlansController extends Controller
     }
     private function GetRemotPlans()
     {
+
         $plans = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.hrfactoryapp.com/Admin/PlansToPartnerShips/getPlans?PartnerID=2");
@@ -192,7 +193,7 @@ class PartnerShipPlansController extends Controller
     }
     private function GetRemotFunctions($id)
     {
-        Log::info('GetRemotFunctions' . $id);
+      //  Log::info('GetRemotFunctions' . $id);
         $functions = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.hrfactoryapp.com/Admin/Functions/getFunctions?planID=$id");

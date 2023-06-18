@@ -31,6 +31,9 @@
                         @csrf
                         <div class="row">
                             <input type="hidden" name="reminder" id="reminder" value="{{ $reminder }}">
+                            @if($reminder==2)
+                            <input type="hidden" name="respondentID" id="respondentID" value="{{ $respondentID }}">
+                            @endif
                             {{-- select Client --}}
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">

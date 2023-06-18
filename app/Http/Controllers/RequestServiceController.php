@@ -57,8 +57,10 @@ class RequestServiceController extends Controller
      */
     public function show(RequestService $requestService, $id)
     {
+
         $request = RequestService::find($id);
         $clients = Clients::where('CilentFPEmil', $request->fp_email)->get();
+        // dd("sssss");
         return view('request_service.show', compact('request', 'clients'));
     }
 

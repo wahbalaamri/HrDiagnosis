@@ -129,13 +129,13 @@
 
                                         <button onclick="getFunctions('{{ $partnerShipPlan->id }}')"
                                             class="btn btn-primary float-start">View Functions</button>
-                                        <div class="form-check form-switch float-end">
+                                        {{-- <div class="form-check form-switch float-end">
                                             <input class="form-check-input" type="checkbox" role="switch"
                                                 id="flexSwitchCheckChecked" {{ $partnerShipPlan->Status? 'checked':''
                                             }}>
                                             <label class="form-check-label" for="flexSwitchCheckChecked">{{
                                                 $partnerShipPlan->Status? 'Active':'In-Active' }}</label>
-                                        </div>
+                                        </div> --}}
                                         {{-- <a
                                             href="{{ route('practice-questions.CreateNewQuestion', $partnerShipPlan->id) }}"
                                             class="btn btn-primary float-end">Add New Question</a> --}}

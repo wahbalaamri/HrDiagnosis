@@ -49,7 +49,7 @@ class ClientsController extends Controller
      */
     public function show(Request $request, Clients $client)
     {
-        Log::alert($request->ajax());
+        //Log::alert($request->ajax());
 
         return view('Clients.show', compact('client'));
     }

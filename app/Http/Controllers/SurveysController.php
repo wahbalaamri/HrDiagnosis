@@ -21,9 +21,11 @@ class SurveysController extends Controller
      */
     public function index(Request $request)
     {
-        $surveys = Surveys::all();
+        //redirect to Client
+        return redirect()->route('clients.index');
+        // $surveys = Surveys::all();
 
-        return view('Surveys.index', compact('surveys'));
+        // return view('Surveys.index', compact('surveys'));
     }
 
     /**

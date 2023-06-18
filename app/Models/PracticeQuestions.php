@@ -36,4 +36,9 @@ class PracticeQuestions extends Model
     {
         return $this->belongsTo(FunctionPractice::class,'PracticeId');
     }
+    public function SurveyAns()
+    {
+        return $this->hasMany(SurveyAnswers::class,'QuestionId');
+        # code...
+    }
 }

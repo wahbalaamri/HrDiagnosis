@@ -40,4 +40,9 @@ class Emails extends Model
     {
         return $this->belongsTo(Surveys::class, 'SurveyId');
     }
+    //hasMany relationship with SurveyAnswers
+    public function surveyAnswers()
+    {
+        return $this->hasMany(SurveyAnswers::class,'AnsweredBy','id');
+    }
 }
