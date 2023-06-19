@@ -14,7 +14,7 @@
             {{-- card to show plan details --}}
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ $partnerShipPlan->PlanTitle }} plan details.</h3>
+                    <h3 class="card-title">{{ $partnerShipPlan->PlanTitle }} {{ __('plan details.') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="justify-content-center text-center">
@@ -24,60 +24,60 @@
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Plan Title') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{{
-                                            $partnerShipPlan->PlanTitle }}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->PlanTitleAr:$partnerShipPlan->PlanTitle }}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Objective') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{!!
-                                            $partnerShipPlan->Objective !!}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->ObjectiveAr:$partnerShipPlan->Objective !!}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Process') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{{
-                                            $partnerShipPlan->Process }}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->ProcessAr:$partnerShipPlan->Process }}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Participants') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">
                                             @switch($partnerShipPlan->Audience)
                                             @case(1)
-                                            Only HR Factory App Members
+                                            {{ __('Only HR Factory App Members') }}
                                             @break
 
                                             @case(2)
-                                            Only HR Employees
+                                            {{ __('Only HR Employees') }}
                                             @break
 
                                             @case(3)
-                                            Only Employees
+                                            {{ __('Only Employees') }}
                                             @break
 
                                             @case(4)
-                                            Only Managers
+                                            {{ __('Only Managers') }}
                                             @break
 
                                             @case(5)
-                                            Only HR Employees & Employees
+                                            {{ __('Only HR Employees & Employees') }}
                                             @break
 
                                             @case(6)
-                                            Only Managers & Employees
+                                            {{ __('Only Managers & Employees') }}
                                             @break
 
                                             @case(7)
-                                            Only Managers & HR Employees
+                                            {{ __('Only Managers & HR Employees') }}
                                             @break
 
                                             @case(8)
-                                            Only Managers, HR Employees & Employees
+                                            {{ __('Only Managers, HR Employees & Employees') }}
                                             @break
 
                                             @case(9)
-                                            All Employees
+                                            {{ __('All Employees') }}
                                             @break
 
                                             @case(10)
-                                            Public
+                                            {{ __('Public') }}
                                             @break
 
                                             @default
@@ -87,17 +87,17 @@
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Report') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{{
-                                            $partnerShipPlan->Report }}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->ReportAr:$partnerShipPlan->Report }}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Delivery Mode') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{{
-                                            $partnerShipPlan->DeliveryMode }}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->DeliveryModeAr:$partnerShipPlan->DeliveryMode }}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Limitations') }}</span>
                                         <span class="float-end" style="color:#eead35 !important">{!!
-                                            $partnerShipPlan->Limitations !!}</span>
+                                            app()->getLocale()=='ar'?$partnerShipPlan->LimitationsAr:$partnerShipPlan->Limitations !!}</span>
                                     </li>
                                     <li class="list-group-item">
                                         <span class="font-weight-bold float-start">{{ __('Price') }}</span>
@@ -108,15 +108,15 @@
                                             <p>
                                                 @switch($partnerShipPlan->PaymentMethod)
                                                 @case(1)
-                                                Free
+                                                {{ __('Free') }}
                                                 @break
 
                                                 @case(2)
-                                                On Service Required Payment
+                                                {{ __('On Service Required Payment') }}
                                                 @break
 
                                                 @case(3)
-                                                Subscribe
+                                                {{ __('Subscribe') }}
                                                 @break
 
                                                 @default
@@ -128,13 +128,13 @@
                                     <li class="list-group-item">
 
                                         <button onclick="getFunctions('{{ $partnerShipPlan->id }}')"
-                                            class="btn btn-primary float-start">View Functions</button>
+                                            class="btn btn-primary float-start">{{ __('View Functions') }}</button>
                                         <div class="form-check form-switch float-end">
                                             <input class="form-check-input" type="checkbox" role="switch"
                                                 id="flexSwitchCheckChecked" {{ $partnerShipPlan->Status? 'checked':''
                                             }}>
                                             <label class="form-check-label" for="flexSwitchCheckChecked">{{
-                                                $partnerShipPlan->Status? 'Active':'In-Active' }}</label>
+                                                $partnerShipPlan->Status? __('Active'):__('In-Active') }}</label>
                                         </div>
                                         {{-- <a
                                             href="{{ route('practice-questions.CreateNewQuestion', $partnerShipPlan->id) }}"
@@ -176,7 +176,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="PracticeLabel">Practices</h1>
+                <h1 class="modal-title fs-5" id="PracticeLabel">{{ __('Practices') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -185,7 +185,7 @@
                         <thead>
                             <tr>
                                 <th>{{ __('#') }}</th>
-                                <th>{{ __('PracticeTitle') }}</th>
+                                <th>{{ __('Practice Title') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Questions') }}</th>
                                 {{-- <th>{{ __('Action') }}</th> --}}
@@ -204,7 +204,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="QuestionsLabel">Questions</h1>
+                <h1 class="modal-title fs-5" id="QuestionsLabel">{{ __('Questions') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -225,8 +225,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-target="#Practice" data-bs-toggle="modal">Back
-                    Practices</button>
+                <button class="btn btn-primary" data-bs-target="#Practice" data-bs-toggle="modal">
+                    {{ __('Back Practices') }}
+                </button>
             </div>
         </div>
     </div>

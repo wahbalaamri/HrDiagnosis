@@ -5,15 +5,13 @@
     <div class="row main-bg">
         <div class="col-lg-6 col-md-12 col-sm-12 p-0 m-0 text-center justify-content-center align-self-center">
             <h1 class="text-white" style="font-size: 3.4rem">
-                HR Diagnostic
-                Solutions
+                {{ __('HR Diagnostic Solutions') }}
             </h1>
-            <span style="font-size: 2.4rem">
-                Maximize your return on people investment
+            <span style="font-size: 2.4rem">{{ __('Maximize your return on people investment') }}
             </span>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 p-0 m-0">
-            <img src="{{ asset('assets/img/takatuf.png') }}" class="float-end image-2" alt="" srcset="">
+            <img src="{{ asset('assets/img/mainbg.png') }}" class="float-end image-2" alt="" srcset="">
         </div>
     </div>
 </div>
@@ -23,7 +21,7 @@
     {{-- <div class="row"> --}}
         <div class="col-12 text-center justify-content-center align-self-center">
             <h1 class="text-center">
-                Our approach
+                {{ __('Our approach') }}
             </h1>
             {{-- <div class="container">
                 <div class="row">
@@ -67,10 +65,7 @@
                     <div class="col-12">
                         <div class="w-75 m-auto p-3">
 
-                            <p class="">We believe that HR value is defined by the receivers(managers) and not by
-                                the giver (HR department) and thus we assess the managers' experience in handling HR
-                                activities in a way serving their business needs.
-
+                            <p class="">{{ __("We believe that HR value is defined by the receivers(managers) and not by the giver (HR department) and thus we assess the managers' experience in handling HR activities in a way serving their business needs.") }}
                             </p>
                         </div>
                     </div>
@@ -81,8 +76,7 @@
                     </div>
                     <div class="col-12">
                         <div class="w-75 m-auto p-3">
-                            <p class="text-center">We also believe in the value of enhancing the employee experience and
-                                thus we also capture employees’ voices.</p>
+                            <p class="text-center">{{ __('We also believe in the value of enhancing the employee experience and thus we also capture employees’ voices.') }}</p>
                         </div>
                     </div>
                 </div>
@@ -92,11 +86,7 @@
                     </div>
                     <div class="col-12">
                         <div class="w-75 m-auto p-3">
-                            <p class="text-center">We don't believe in a one-size-fits-all approach and in "Best
-                                Practices"
-                                and thus we assess the outcome/results and identify the possible root causes which need
-                                to
-                                be validated &refined.
+                            <p class="text-center">{{ __('We don\'t believe in a one-size-fits-all approach and in "Best Practices" and thus we assess the outcome/results and identify the possible root causes which need to be validated &refined.') }}
                             </p>
                         </div>
                     </div>
@@ -113,7 +103,7 @@
     <div class="row pt-4 pb-5" style="background-color: #f8f7f5;">
         <div class="col-12 pb-4 pt-4 text-center justify-content-center align-self-center">
             <h1 class="text-center text-capitalize">
-                Solution Plans
+                {{ __('Solution Plans') }}
             </h1>
         </div>
         <div class="col-12">
@@ -128,38 +118,38 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
-                                    style="background-color: #e4a229; border-radius: 10px 0px 0px 0px; display: flex;align-items: center;height: 2.85rem;">
+                                    style="background-color: #e4a229; border-radius: {{ app()->getLocale()=='ar'?'0px 10px 0px 0px':'10px 0px 0px 0px' }}; display: flex;align-items: center;height: 2.85rem;">
                                     <img src="{{ asset('assets/img/icon/target.png') }}" height="15" alt="" srcset=""
-                                        class="margin-right-15px">Objective
+                                        class="margin-right-15px">{{ __('Objective') }}
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
                                     style="background-color: #eead35;display: flex;align-items: center; height: 2.85rem;">
                                     <img src="{{ asset('assets/img/icon/process.png') }}" height="18" alt="" srcset=""
-                                        class="margin-right-15px">Process
+                                        class="margin-right-15px">{{ __('Process') }}
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
                                     style="background-color: #e4a229; height: 4rem; display: flex;align-items: center;">
                                     <img src="{{ asset('assets/img/icon/participant.png') }}" height="15" alt=""
-                                        srcset="" class="margin-right-15px">Participants
+                                        srcset="" class="margin-right-15px">{{ __('Participants') }}
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
                                     style="background-color: #eead35;display: flex;align-items: center;"><img
                                         src="{{ asset('assets/img/icon/reports.png') }}" height="18" alt="" srcset=""
-                                        class="margin-right-15px">Report</div>
+                                        class="margin-right-15px">{{ __('Report') }}</div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
                                     style="background-color: #e4a229;display: flex;align-items: center;height: 4rem;">
                                     <img src="{{ asset('assets/img/icon/delverymode.png') }}" height="15" alt=""
-                                        srcset="" class="margin-right-15px">Delivery Mode
+                                        srcset="" class="margin-right-15px">{{ __('Delivery Mode') }}
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
                                     style="background-color: #eead35;display: flex;align-items: center;"><img
                                         src="{{ asset('assets/img/icon/limitations.png') }}" height="18" alt=""
-                                        srcset="" class="margin-right-15px">Limitations</div>
+                                        srcset="" class="margin-right-15px">{{ __('Limitations') }}</div>
 
                                 <div class="pr-2 pt-2 pb-2 p-5 text-white"
-                                    style="background-color: #e4a229; border-radius: 0px 0px 0px 5px;display: flex;align-items: center;">
+                                    style="background-color: #e4a229; border-radius: {{ app()->getLocale()=='ar'?'0px 0px 5px 0px':'0px 0px 0px 5px' }};display: flex;align-items: center;">
                                     <img src="{{ asset('assets/img/icon/price.png') }}" height="18" alt="" srcset=""
-                                        class="margin-right-15px">Price
+                                        class="margin-right-15px">{{ __('Price') }}
                                 </div>
 
                             </div>
@@ -180,9 +170,9 @@
 
                                     <h1
                                         style="color: @if($loop->index==0) #fdc56f @elseif($loop->index==1) #e3a129 @else #eb6323 @endif;">
-                                        Plan 0{{ $loop->iteration }}</h1>
+                                        {{__('Plan 0'.$loop->iteration)}}</h1>
                                     <h2 style="color: #231f20;margin-top: 10px !important;">
-                                        {{ $plan->PlanTitle }}
+                                        {{ app()->getLocale()=='ar'?$plan->PlanTitleAr:$plan->PlanTitle }}
                                     </h2>
                                     @if($loop->index==0)
                                     <?php $color='#fdc56f'; ?>
@@ -193,8 +183,8 @@
                                     @endif
                                     @if($plan->PaymentMethod==1)
                                     <a class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2" href="{{ route('FreeSurvey') }}"
-                                        style="background-color: {{ $color }}; font-size: 1.3rem;margin-top: 4.8rem !important;"><b>Get
-                                            Started</b></a>
+                                        style="background-color: {{ $color }}; font-size: 1.3rem;margin-top: 4.8rem !important;"><b>{{
+                                            __('Get Started') }}</b></a>
                                     {{-- @elseif($loop->index==1)
                                     <button class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2" data-bs-toggle="modal"
                                         onclick="RenderModal('{{ $plan->id }}', 'Request Plan 2 Service')"
@@ -205,8 +195,8 @@
                                     <button class="btn btn-lg text-white pt-2 pb-2 p-5 mt-2" data-bs-toggle="modal"
                                         onclick="RenderModal('{{ $plan->id }}', 'Request Plan Service')"
                                         data-bs-target="#requestservice"
-                                        style="background-color:  {{ $color }}; font-size: 1.3rem;margin-top: 3.9rem !important;"><b>Request
-                                            Service</b></button>
+                                        style="background-color:  {{ $color }}; font-size: 1.3rem;margin-top: 3.9rem !important;"><b>{{
+                                            __('Request Service') }}</b></button>
                                     @endif
                                 </div>
                             </div>
@@ -214,7 +204,8 @@
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #f7f7f7; height: 2.85rem;">
                                     <button type="button" class="btn btn-sm p-0 m-0" data-toggle="popover"
-                                        title="Objectives" data-popover-content="#Objectives{{$loop->iteration}}"><img
+                                        title="{{__('Objectives')}}"
+                                        data-popover-content="#Objectives{{$loop->iteration}}"><img
                                             src="{{ asset('assets/img/target.png') }}" height="19" alt=""
                                             srcset=""></button>
 
@@ -222,13 +213,14 @@
                                 <div id="Objectives{{$loop->iteration}}" style="display:none;">
                                     <div class="popover-body">
 
-                                        {!! $plan->Objective !!}
+                                        {!! app()->getLocale()=='ar'?$plan->ObjectiveAr:$plan->Objective !!}
                                     </div>
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #ffffff; height: 2.85rem;">
                                     <button type="button" class="btn btn-sm p-0 m-0" data-toggle="popover"
-                                        title="Process" data-popover-content="#Process{{$loop->iteration}}"><img
+                                        title="{{__('Process')}}"
+                                        data-popover-content="#Process{{$loop->iteration}}"><img
                                             src="{{ asset('assets/img/process.png') }}" height="19" alt=""
                                             srcset=""></button>
 
@@ -237,7 +229,7 @@
                                 <div id="Process{{$loop->iteration}}" style="display:none;">
                                     <div class="popover-body">
 
-                                        {!! $plan->Process !!}
+                                        {!! app()->getLocale()=='ar'?$plan->Process:$plan->Process !!}
                                     </div>
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
@@ -245,43 +237,43 @@
 
                                     @switch($plan->Audience)
                                     @case(1)
-                                    Only HR Factory App Members
+                                    {{ __('Only HR Factory App Members') }}
                                     @break
 
                                     @case(2)
-                                    Only HR Employees
+                                    {{ __('Only HR Employees') }}
                                     @break
 
                                     @case(3)
-                                    Only Employees
+                                    {{ __('Only Employees') }}
                                     @break
 
                                     @case(4)
-                                    Only Managers
+                                    {{ __('Only Managers') }}
                                     @break
 
                                     @case(5)
-                                    Only HR Employees & Employees
+                                    {{ __('Only HR Employees & Employees') }}
                                     @break
 
                                     @case(6)
-                                    Only Managers & Employees
+                                    {{ __('Only Managers & Employees') }}
                                     @break
 
                                     @case(7)
-                                    Only Managers & HR Employees
+                                    {{ __('Only Managers & HR Employees') }}
                                     @break
 
                                     @case(8)
-                                    Only Managers, HR Employees & Employees
+                                    {{ __('Only Managers, HR Employees & Employees') }}
                                     @break
 
                                     @case(9)
-                                    All Employees
+                                    {{ __('All Employees') }}
                                     @break
 
                                     @case(10)
-                                    Public
+                                    {{ __('Public') }}
                                     @break
 
                                     @default
@@ -295,26 +287,29 @@
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #f7f7f7; height: 4rem;">
-                                    {{ $plan->DeliveryMode }}</div>
+                                    {{ app()->getLocale()=='ar'?$plan->DeliveryModeAr:$plan->DeliveryMode }}</div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #ffffff;">
                                     <button type="button" class="btn btn-sm p-0 m-0" data-toggle="popover"
-                                        title="Limitations" data-popover-content="#Limitations{{$loop->iteration}}">
+                                        title="{{ __('Limitations') }}"
+                                        data-popover-content="#Limitations{{$loop->iteration}}">
                                         <img src="{{ asset('assets/img/limitations.png') }}" height="19" alt=""
                                             srcset=""></button>
                                 </div>
+
                                 <div id="Limitations{{$loop->iteration}}" style="display:none;">
                                     <div class="popover-body">
 
-                                        {!! !str_contains($plan->Limitations,'Nil')?$plan->Limitations:"Nil"!!}
+                                        {!! !str_contains($plan->Limitations,'Nil')?
+                                        app()->getLocale()=='ar'?$plan->LimitationsAr:$plan->Limitations:"Nil"!!}
                                     </div>
                                 </div>
                                 <div class="pr-2 pt-2 pb-2 p-5 text-black text-center"
                                     style="background-color: #f7f7f7;">
                                     @if ($plan->PaymentMethod==1)
-                                    Free
+                                    {{ __('Free') }}
                                     @else
-                                    Based on agreed scope
+                                    {{ __('Based on agreed scope') }}
                                     @endif</div>
 
                             </div>
@@ -459,7 +454,7 @@
 <div class="container-fluid p-5">
     <div class="row justify-content-center">
         <div class="col-6">
-            <h1 class="pt-3 pb-3 text-center text-capitalize">People management framework<sup class="h5">TM</sup></h1>
+            <h1 class="pt-3 pb-3 text-center text-capitalize">{{ __('People management framework') }}<sup class="h5">TM</sup></h1>
             <video id="myVid" src="{{ asset('assets/video/Laptop.mp4') }}" autoplay="true" muted="muted">
 
             </video>

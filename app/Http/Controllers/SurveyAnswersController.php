@@ -203,7 +203,7 @@ class SurveyAnswersController extends Controller
 
                 $counter++;
 
-                $practiceName = $functionPractice->PracticeTitle;
+                $practiceName = App()->getLocale()=='ar'?$functionPractice->PracticeTitleAr:$functionPractice->PracticeTitle;
 
                 $practiceAns = $SurveyResult->where('QuestionId', '=', $functionPractice->practiceQuestions->id)->sum('AnswerValue');
                 if ($function->id == 8) {

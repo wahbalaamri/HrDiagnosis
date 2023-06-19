@@ -94,8 +94,8 @@ class ClientsController extends Controller
                 ->addIndexColumn()
                 ->addColumn('survey_result', function ($row) {
                     $url = route('survey-answers.result', $row->id);
-                    $data='<a  data-bs-toggle="modal" href="#RespondentEmails" onclick="GetRespondentsEmails(\'' . $row->id . '\')" class="btn btn-success btn-sm float-start"> Respondents</a>';
-                    $data .= '<a href="' . $url . '" class="btn btn-info btn-sm float-end"> Result</a>';
+                    $data='<a  data-bs-toggle="modal" href="#RespondentEmails" onclick="GetRespondentsEmails(\'' . $row->id . '\')" class="btn btn-success btn-sm float-start"> '.__('Respondents').'</a>';
+                    $data .= '<a href="' . $url . '" class="btn btn-info btn-sm float-end"> '.__('Result').'</a>';
                     return $data;
                 })
                 // ->addColumn('respondents', function ($row) {
@@ -105,8 +105,8 @@ class ClientsController extends Controller
                 ->addColumn('send_survey', function ($row) {
                     // $url = route('emails.Ssurvey', $row->id,$row->ClientId);
                     // $url = route('survey-answers.result', $row->id);
-                    $data = '<a href="/emails/send-reminder/' . $row->id . '/' . $row->ClientId . '" class="btn btn-info btn-sm float-start"> Reminder</a>';
-                    $data .= '<a href="/emails/send-survey/' . $row->id . '/' . $row->ClientId . '" class="btn btn-success btn-sm float-end"> Survey</a>';
+                    $data = '<a href="/emails/send-reminder/' . $row->id . '/' . $row->ClientId . '" class="btn btn-info btn-sm float-start"> '.__('Reminder').'</a>';
+                    $data .= '<a href="/emails/send-survey/' . $row->id . '/' . $row->ClientId . '" class="btn btn-success btn-sm float-end"> '.__('Survey').'</a>';
                     return $data;
                 })
                 // ->addColumn('send_reminder', function ($row) {
@@ -128,11 +128,11 @@ class ClientsController extends Controller
                     return $row->created_at->format('d-m-Y');
                 })
                 ->editColumn('PlanId', function ($row) {
-                    return $row->plan->PlanTitle;
+                    return App()->getLocale()=='ar'?$row->plan->PlanTitleAr:$row->plan->PlanTitle;
                 })
                 ->editColumn('SurveyStat', function ($row) {
                     $isChecked = $row->SurveyStat ? "checked" : "";
-                    $lable = $row->SurveyStat ? "Active" : "In-Active";
+                    $lable = $row->SurveyStat ? __("Active") : __("Inactive");
                     $check = '<div class="form-check form-switch">';
                     $check .= '<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked' . $row->id . '" ' . $isChecked . ' onchange="ChangeCheck(this,\'' . $row->id . '\')" >';
                     $check .= '<label class="form-check-label" for="flexSwitchCheckChecked' . $row->id . '">' . $lable . '</label></div>';

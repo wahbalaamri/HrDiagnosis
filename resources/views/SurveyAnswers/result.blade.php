@@ -15,18 +15,18 @@
         <div class="col-10" id="finalResult">
             <div id="Function" class="card" style="font-family: emoji;letter-spacing: 0.065rem;">
                 <div class="card-header">
-                    <h3 class="card-title">Results</h3>
+                    <h3 class="card-title">{{ __('Results') }}</h3>
                 </div>
                 <div class="card-body text-capitalize">
 
                     <div class="col-{{ count($functions) }} text-start h3 text-white p-3" style="background-color: #376092;border-radius: 45px 45px 45px 45px;width: 89%; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                        box-shadow: 5px 5px 20px 5px #ABABAB;">Key functions
+                        box-shadow: 5px 5px 20px 5px #ABABAB;">{{ __('Key functions') }}
                     </div>
                     <div class="row  padding-left-10px">
                         @foreach ($functions as $function )
                         <div class="text-center text-white m-1" style="background-color: #376092; width:10.5%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
                         box-shadow: 5px 5px 20px 5px #ABABAB; font-size: 0.79rem">
-                            {{ $function->FunctionTitle }}
+                            {{ app()->getLocale()=='ar'?$function->FunctionTitleAr:$function->FunctionTitle }}
                         </div>
                         @endforeach
                     </div>

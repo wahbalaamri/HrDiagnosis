@@ -183,9 +183,12 @@ class PracticeQuestionsController extends Controller
             //     $button .= '</form>';
             //     return $button;
             // })
+            ->editColumn('',function($row){
+                return App()->getLocale()=='ar'?$row->QuestionAr:$row->Question;
+            })
             ->editColumn('Status', function ($row) {
 
-                return $row->Status ? "Active" : "Inactive";
+                return $row->Status ? __("Active") : __("Inactive");
             })
             // ->rawColumns(['action'])
             ->make(true);

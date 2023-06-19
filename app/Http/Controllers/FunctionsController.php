@@ -174,54 +174,55 @@ class FunctionsController extends Controller
             //     $button .= '</form>';
             //     return $button;
             // })
+            ->editColumn('FunctionTitle', function ($row) {
+                return App()->getLocale() == 'ar' ? $row->FunctionTitleAr : $row->FunctionTitle;
+            })
             ->editColumn('Respondent', function ($row) {
                 $audience = "";
                 switch ($row->Respondent) {
                     case (1):
-                        $audience = "Only HR Employees";
+                        $audience = __("Only HR Employees");
                         break;
 
                     case (2):
-                        $audience = "Only Employees";
+                        $audience = __("Only Employees");
                         break;
 
                     case (3):
-                        $audience = "Only Managers";
+                        $audience = __("Only Managers");
                         break;
 
                     case (4):
-                        $audience = "Only HR Employees & Employees";
+                        $audience = __("Only HR Employees & Employees");
                         break;
 
                     case (5):
-                        $audience = "Only Managers & Employees";
+                        $audience = __("Only Managers & Employees");
                         break;
 
                     case (6):
-                        $audience = "Only Managers & HR Employees";
+                        $audience = __("Only Managers & HR Employees");
                         break;
 
                     case (7):
-                        $audience = "All Employees";
+                        $audience = __("All Employees");
                         break;
 
                     case (8):
-                        $audience = "Public";
+                        $audience = __("Public");
                         break;
                 }
                 return $audience;
             })
             ->editColumn('Status', function ($row) {
 
-                return $row->Status ? "Active" : "Inactive";
+                return $row->Status ? __("Active") : __("Inactive");
             })
-            ->addColumn('practices',function($row){
+            ->addColumn('practices', function ($row) {
                 //btn to show practices
-                return '<button data-bs-toggle="modal" href="#Practice" onclick="getPractice(\''.$row->id.'\')" class="btn btn-primary btn-sm">Practices</a>';
-
+                return '<button data-bs-toggle="modal" href="#Practice" onclick="getPractice(\'' . $row->id . '\')" class="btn btn-primary btn-sm">' . __('Practices') . '</a>';
             })
             ->rawColumns(['practices'])
             ->make(true);
     }
-
 }

@@ -14,7 +14,7 @@
                 {{-- card to Service Requests --}}
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h3 class="">Service Requests</h3>
+                        <h3 class="">{{ __('Service Requests') }}</h3>
                     </div>
                     <div class="card-body">
                         @if (count($requests) > 0)
@@ -22,22 +22,22 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
-                                        <tr>
+                                        <tr class="text-center">
                                             <th>#</th>
-                                            <th>Service</th>
-                                            <th>Company name</th>
-                                            <th>Actions</th>
+                                            <th>{{ __('Service') }}</th>
+                                            <th>{{ __('Company name') }}</th>
+                                            <th>{{ __('Actions') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($requests as $request)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $request->plan->PlanTitle }}</td>
-                                                <td>{{ $request->company_name }}</td>
-                                                <td>
+                                                <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td class="text-center">{{ app()->getLocale()=='ar'?$request->plan->PlanTitleAr:$request->plan->PlanTitle }}</td>
+                                                <td class="text-center">{{ $request->company_name }}</td>
+                                                <td class="text-center">
                                                     <a href="{{ route('service-request.show', $request->id) }}"
-                                                        class="btn btn-primary btn-sm">View</a>
+                                                        class="btn btn-primary btn-sm">{{ __('View') }}</a>
                                                 </td>
                                             </tr>
                                         @endforeach

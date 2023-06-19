@@ -174,11 +174,14 @@ class FunctionPracticeController extends Controller
             // })
             ->editColumn('Status', function ($row) {
 
-                return $row->Status ? "Active" : "Inactive";
+                return $row->Status ? __("Active") : __("Inactive");
             })
             ->addColumn('questions',function($row){
-                $button = '<button data-bs-target="#Questions" data-bs-toggle="modal" onclick="ShowQuestion(\''.$row->id.'\')" class="btn btn-primary btn-sm">Questions</button>';
+                $button = '<button data-bs-target="#Questions" data-bs-toggle="modal" onclick="ShowQuestion(\''.$row->id.'\')" class="btn btn-primary btn-sm">'.__('Questions').'</button>';
                 return $button;
+            })
+            ->editColumn('PracticeTitle',function($row){
+                return App()->getLocale()=='ar'?$row->PracticeTitleAr:$row->PracticeTitle;
             })
 
             ->rawColumns(['questions'])

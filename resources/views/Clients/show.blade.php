@@ -15,11 +15,11 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-6">
-                            <h3 class="card-title">Client Details</h3>
+                            <h3 class="card-title">{{ __('Client Details') }}</h3>
                         </div>
                         {{-- edit client button --}}
                         <div class="col-6 text-end">
-                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-success">Edit</a>
+                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-success">{{ __('Edit') }}</a>
                         </div>
                     </div>
                 </div>
@@ -31,10 +31,10 @@
                                     alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $client->ClientName }}</h5>
-                                    <p class="card-text"><b>Focal Point name: </b>{{ $client->CilentFPName }}</p>
-                                    <p class="card-text"><b>Focal Point Email: </b>{{ $client->CilentFPEmil }}</p>
-                                    <p class="card-text"><b>Client Phone Number: </b>{{ $client->ClientPhone }}</p>
-                                    <button id="GetSurveys" class="btn btn-primary btn-sm">Surveys</button>
+                                    <p class="card-text"><b>{{ __('Focal Point name:') }}</b>{{ $client->CilentFPName }}</p>
+                                    <p class="card-text"><b>{{ __('Focal Point Email:') }} </b>{{ $client->CilentFPEmil }}</p>
+                                    <p class="card-text"><b>{{ __('Client Phone:') }} </b>{{ $client->ClientPhone }}</p>
+                                    <button id="GetSurveys" class="btn btn-primary btn-sm">{{ __('Surveys') }}</button>
                                 </div>
                             </div>
 
@@ -46,20 +46,20 @@
                                         <tr>
                                             <td colspan="8" class="text-end">
                                                 <a href="{{ route('surveys.CreateNewSurvey',$client->id) }}"
-                                                    class="btn btn-sm btn-primary">Create New Survey</a>
+                                                    class="btn btn-sm btn-primary">{{ __('Create New Survey') }}</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th scope="">#</th>
-                                            <th scope="">Survey Name</th>
-                                            <th scope="">Plan</th>
-                                            <th scope="">Survey Status</th>
-                                            <th scope="">Survey Date</th>
+                                            <th scope="">{{ __('Survey Name') }}</th>
+                                            <th scope="">{{ __('Plan') }}</th>
+                                            <th scope="">{{ __('Survey Status') }}</th>
+                                            <th scope="">{{ __('Survey Date') }}</th>
                                             {{-- <th scope="">Respondents Email</th> --}}
-                                            <th scope="">Send Remainder/Survey</th>
+                                            <th scope="">{{ __('Send Survey') }}</th>
                                             {{-- <th scope="">Send Remainder</th> --}}
-                                            <th scope="">View Survey Respondents/Result</th>
-                                            <th scope="">Survey Actions</th>
+                                            <th scope="">{{ __('Result') }}</th>
+                                            <th scope="">{{ __('Survey Actions') }}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -76,7 +76,7 @@
     <div class="modal-dialog modal-dialog-centered ">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="RespondentEmailsLabel">RespondentEmails</h1>
+                <h1 class="modal-title fs-5" id="RespondentEmailsLabel">{{ __('Respondents Emails') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -85,14 +85,14 @@
                         <thead>
                             <tr>
                                 <td colspan="4"> <a href="#" id="CreateEmailUrl"
-                                        class="btn btn-sm btn-success float-end">Add Emails</a></td>
+                                        class="btn btn-sm btn-success float-end">{{ __('Add Emails') }}</a></td>
                             </tr>
                             <tr>
                                 <th>{{ __('#') }}</th>
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Type') }}</th>
 
-                                <th>{{ __('Action') }}</th>
+                                <th>{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
