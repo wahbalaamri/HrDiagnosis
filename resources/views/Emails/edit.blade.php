@@ -5,12 +5,12 @@
 {{-- Edit email --}}
 @section('content')
     <div class="container pt-5 mt-5">
-        <div class="row">
-            <div class="col-3">
+        <div class="">
+            <div class="col-12 mt-5 pt-5 {{ App()->getLocale()=='ar' ? 'custom-fixed-top-rtl' : 'custom-fixed-top' }}">
                 <!-- side bar menu -->
                 @include('layouts.sidebar')
             </div>
-            <div class="col-9">
+            <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header">
                         <h3 class="card-title">Edit Email</h3>

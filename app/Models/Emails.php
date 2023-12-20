@@ -17,6 +17,7 @@ class Emails extends Model
      * @var array
      */
     protected $fillable = [
+        'DepartmentId',
         'ClientId',
         'SurveyId',
         'Email',
@@ -39,5 +40,20 @@ class Emails extends Model
     public function survey()
     {
         return $this->belongsTo(Surveys::class, 'SurveyId');
+    }
+    // belongsTo Departments
+    public function department()
+    {
+        return $this->belongsTo(Departments::class, 'DepartmentId');
+    }
+    // belongsTo Sector
+    public function sector()
+    {
+        return $this->belongsTo(Sectors::class, 'sector_id');
+    }
+    // belongsTo Companies
+    public function company()
+    {
+        return $this->belongsTo(Companies::class, 'comp_id');
     }
 }

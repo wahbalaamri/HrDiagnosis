@@ -12,6 +12,7 @@ use App\Models\SurveyAnswers;
 use App\Models\Surveys;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class SurveysController extends Controller
 {
@@ -123,5 +124,62 @@ class SurveysController extends Controller
     {
         return Excel::download(new PrioritiesAnswersExport($id), 'PrioritiesAnswersExport.xlsx');
         # code...
+    }
+    public function addOpenEndedQ($id)
+    {
+
+        $data = [
+            'survey' => $id,
+            'id' => null,
+            'client_id' => Surveys::find($id)->ClientId
+        ];
+        return view('Surveys.addOpenEndedQ')->with($data);
+    }
+    public function EditOpenEndedQ($id, $survey)
+    {
+
+        $data = [
+            'id' => $id,
+            'survey' => $survey,
+            'client_id' => Surveys::find($survey)->ClientId
+        ];
+        return view('Surveys.addOpenEndedQ')->with($data);
+    }
+    public function SaveOpenEndedQ(Request $request,  $survey)
+    {
+
+        $openEndedQ = new \App\Models\OpenEndedQuestions();
+        $openEndedQ->question = $request->question;
+        $openEndedQ->question_ar = $request->question_ar;
+        $openEndedQ->question_in = $request->question_in;
+        $openEndedQ->answer_type = "text";
+        $openEndedQ->survey_id = $survey;
+        $openEndedQ->save();
+
+        return redirect()->route('clients.show', Surveys::find($survey)->ClientId);
+    }
+    //UpdateOpenEndedQ
+    public function UpdateOpenEndedQ(Request $request, $id, $survey)
+    {
+
+
+        $openEndedQ = \App\Models\OpenEndedQuestions::find($id);
+        $openEndedQ->question = $request->question;
+        $openEndedQ->question_ar = $request->question_ar;
+        $openEndedQ->question_in = $request->question_in;
+        $openEndedQ->answer_type = "text";
+        $openEndedQ->save();
+
+        return redirect()->route('clients.show', Surveys::find($survey)->ClientId);
+    }
+
+    //getOEQ
+    public function getOEQ(Request $request, $id)
+    {
+        // Log::alert("ddd");
+        $openEndedQ = \App\Models\OpenEndedQuestions::where('survey_id',$id)->get();
+        //set up for yajra datatable
+        return DataTables::of($openEndedQ)
+        ->addIndexColumn()->make(true);
     }
 }

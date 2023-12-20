@@ -1,7 +1,7 @@
 {{-- create sidebar menu --}}
 @php
     $menu = [
-        __('Plans') => [
+         __('Plans')  => [
             'icon' => 'fa fa-list',
             'url' => route('partner-ship-plans.index'),
             'active' => 'partner-ship-plans',
@@ -66,12 +66,10 @@
 @endphp
 
     {{-- create sidebar menu --}}
-    <ul class="list-group" dir="{{ app()->getLocale()=='ar'? 'rtl':'ltr' }}" data-widget="tree" style="margin-top: 0.5% ; margin-bottom: 0.2%;
-    position: fixed;
-    z-index: 0;">
+    <ul class="list-group list-group-horizontal" data-widget="tree">
         <li class="header list-group-item text-center">{{ __('MAIN NAVIGATION') }}</li>
         @foreach ($menu as $key => $value)
-            <li dir="{{ app()->getLocale()=='ar'? 'rtl':'ltr' }}" class="list-group-item text-start {{ Request::is($value['active']) ? 'active btn btn-primary text-white' : 'btn btn-secondary' }}">
+            <li class="list-group-item text-start {{ Request::is($value['active']) ? 'active btn btn-primary text-white' : 'btn btn-secondary' }}">
                 <a href="{{ $value['url'] }}" class="btn stretched-link">
                     <i class="{{ $value['icon'] }}"></i> <span class="m-3">{{ $key }}</span>
                 </a>

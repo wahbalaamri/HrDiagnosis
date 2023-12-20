@@ -5,12 +5,12 @@
 {{-- Emails List --}}
 @section('content')
     <div class="container pt-5 mt-5">
-        <div class="row">
-            <div class="col-3">
+        <div class="">
+            <div class="col-12 mt-5 pt-5 {{ App()->getLocale()=='ar' ? 'custom-fixed-top-rtl' : 'custom-fixed-top' }}">
                 <!-- side bar menu -->
                 @include('layouts.sidebar')
             </div>
-            <div class="col-9">
+            <div class="col-12">
                 {{-- search for emails using survey id and client id --}}
                 <div class="card mb-4">
                     <div class="card-header">

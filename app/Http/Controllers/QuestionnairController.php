@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Emails;
 use App\Models\freeSurveyAnswers;
 use App\Models\Functions;
+use App\Models\OpenEndedQuestionsAnswers;
 use App\Models\PartnerShipPlans;
 use App\Models\PrioritiesAnswers;
 use App\Models\SurveyAnswers;
 use App\Models\Surveys;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QuestionnairController extends Controller
 {
-    //
     public function index($id)
     {
         $emailDetails = Emails::find($id);
@@ -23,7 +24,7 @@ class QuestionnairController extends Controller
         }
         $answerBythisEmail = SurveyAnswers::where('AnsweredBy', $id)->count();
         if ($answerBythisEmail > 0) {
-            return view('errors.404');
+            return view('errors.completed');
         }
         $SurveyId = $emailDetails->SurveyId;
         $survey = Surveys::where([['id', $SurveyId], ['SurveyStat', '=', true]])->first();
@@ -31,6 +32,7 @@ class QuestionnairController extends Controller
             return view('errors.404');
         }
         $planId = $survey->plan->id;
+        $open_end_q = $survey->OpenEndQ;
         $functions = Functions::where([['Status', '=', 1], ['PlanId', '=', $survey->PlanId]])->get();
         $user_type = $emailDetails->EmployeeType;
         $can_ansewer_to_priorities = false;
@@ -58,6 +60,7 @@ class QuestionnairController extends Controller
             'SurveyId' => $SurveyId,
             'email_id' => $id,
             'plan_id' => $planId,
+            'open_end_q' => $open_end_q
         ];
         return view('Questions.index')->with($data);
     }
@@ -69,7 +72,10 @@ class QuestionnairController extends Controller
         $PlanId = $reply[0]['PlanID'];
         $EmailId = $reply[0]['EmailId'];
         $priorities = $reply[0]['priorities'];
-
+        $oe_ans = $reply[0]['oe_ans'];
+        $gender = $reply[0]['gender'];
+        $agegroup = $reply[0]['agegroup'];
+        $ansAva=SurveyAnswers::where([['AnsweredBy',$EmailId],['SurveyId',$SurveyId]])->get();
         if ($SurveyId == null) {
             $Count = freeSurveyAnswers::select('SurveyId')->distinct('SurveyId')->count('SurveyId');
             foreach ($QuestionAnswers as $key => $value) {
@@ -86,7 +92,7 @@ class QuestionnairController extends Controller
                 'url' => route('survey-answers.freeSurveyResult', "FreeSurvey-" . ($Count + 1)),
             ];
             return response()->json($data);
-        } else {
+        } elseif(count($ansAva)==0) {
             foreach ($QuestionAnswers as $key => $value) {
                 $survey_answer = new SurveyAnswers();
                 $survey_answer->SurveyId = $SurveyId;
@@ -106,6 +112,28 @@ class QuestionnairController extends Controller
                     $Priority_answer->save();
                 }
             }
+            if ($oe_ans != null) {
+                foreach ($oe_ans as $key => $value) {
+                    $oe_answer = new OpenEndedQuestionsAnswers();
+                    $oe_answer->survey_id = $SurveyId;
+                    $oe_answer->respondent_id = $EmailId;
+                    $oe_answer->open_ended_question_id = $value['questionId'];
+                    //check $value['answer'] length if grater than 55 get sub-string of it
+                    if (strlen($value['answer']) > 55) {
+                        $oe_answer->answer = substr($value['answer'], 0, 55);
+                    }
+                    $oe_answer->answer = $value['answer'];
+                    if ($value['answer'] != null || $value['answer'] != '') {
+                        $oe_answer->save();
+                    }
+                }
+            }
+            //update emails with agegroup and gender
+            $email = Emails::find($EmailId);
+            $email->age_generation = $agegroup;
+            $email->gender = $gender;
+            $email->save();
+
         }
         $data = [
             'msg' => 'success',
@@ -127,5 +155,66 @@ class QuestionnairController extends Controller
             'plan_id' => $free_plan->id,
         ];
         return view('Questions.index')->with($data);
+    }
+    function generateSurveyUrlForm()
+    {
+        return view('Surveys.generateSurveyURl');
+    }
+    function generateSurveyUrl(Request $request)
+    {
+        //get email id from request
+        $email_id = $request->email;
+        //get mobile number from request
+        $mobile_number = $request->mobile;
+        //get employee id from request
+        // $employee_id = $request->employee_id;
+        //check any of them not null and add it to where elequent querey
+        $where = [];
+        if ($email_id != null) {
+            $where[] = ['Email', '=', $email_id];
+        }
+        if ($mobile_number != null) {
+            $where[] = ['Mobile',  $mobile_number ];
+        }
+        // if($employee_id != null){
+        //     $where[] = ['Emp_id','=',$employee_id];
+        // }
+        //check is $where is empty return back with error
+        if (empty($where)) {
+            return back()->with('error', __('Please enter at least one of the following: email, mobile number or employee id'));
+        }
+        //get email details from database
+        $id = Emails::where($where)->first();
+        //check if email details is null return back with error
+        if ($id == null) {
+            return back()->with('error', __('No email found with this data'));
+        }
+        //redirect to survey page with email id
+        return redirect()->route('survey', $id->id);
+    }
+    public function surveyQRCode()
+    {
+        $data = QrCode::generate(
+            route('survey.generateSurveyUrlForm'),
+        );
+        return view('home.QRcode', compact('data'));
+    }
+    function testRadio()
+    {
+        $survey = Surveys::where([['id', 6], ['SurveyStat', '=', true]])->first();
+        $planId = $survey->plan->id;
+        $functions = Functions::where([['Status', '=', 1], ['PlanId', '=', $survey->PlanId]])->get();
+        $open_end_q = $survey->OpenEndQ;
+        $can_ansewer_to_priorities = true;
+        $data = [
+            'functions' => $functions,
+            // 'user_type' => $user_type,
+            'can_ansewer_to_priorities' => $can_ansewer_to_priorities,
+            'SurveyId' => 6,
+            'email_id' => 2,
+            'open_end_q' => $open_end_q,
+            'plan_id' => $planId,
+        ];
+        return view('Surveys.testing')->with($data);
     }
 }

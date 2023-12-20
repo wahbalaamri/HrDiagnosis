@@ -5,12 +5,12 @@
 {{-- create Email --}}
 @section('content')
 <div class="container pt-5 mt-5">
-    <div class="row">
-        <div class="col-3">
+        <div class="">
+            <div class="col-12 mt-5 pt-5 {{ App()->getLocale()=='ar' ? 'custom-fixed-top-rtl' : 'custom-fixed-top' }}">
             <!-- side bar menu -->
             @include('layouts.sidebar')
         </div>
-        <div class="col-9">
+        <div class="col-12">
             {{-- add emails manual --}}
             <ul>
                 @if ($errors->any())
@@ -27,7 +27,7 @@
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="SurveyId">{{ __('Survey') }}</label>
                                     <select name="SurveyId" id="SurveyId"
@@ -45,7 +45,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="ClientId">{{ __('Client') }}</label>
                                     <select name="ClientId" id="ClientId"
@@ -59,24 +59,87 @@
                                     </select>
                                 </div>
                             </div>
+                            {{-- select sector --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="SectorId">{{ __('Sector') }}</label>
+                                    <select name="SectorId" id="SectorId" onchange="setUpComapny('SectorId','CompanyId')"
+                                        class="form-control @error('SectorId') is-invalid @enderror">
+                                        <option value="">{{ __('Select Sector') }}</option>
+                                        @foreach ($sectors as $sector)
+                                        <option value="{{ $sector->id }}" @if (old('SectorId')==$sector->id) selected
+                                            @endif>
+                                            {{ app()->getLocale()=='ar'? $sector->sector_name_ar:$sector->sector_name_en
+                                            }}</option>
+                                        @endforeach
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('SectorId')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- select company --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="CompanyId">{{ __('Company') }}</label>
+                                    <select name="CompanyId" id="CompanyId" onchange="setUpDep('CompanyId','DepartmentId')"
+                                        class="form-control @error('CompanyId') is-invalid @enderror">
+                                        <option value="">{{ __('Select Company') }}</option>
+
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('CompanyId')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- select department --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="DepartmentId">{{ __('Department') }}</label>
+                                    <select name="DepartmentId" id="DepartmentId"
+                                        class="form-control @error('DepartmentId') is-invalid @enderror">
+                                        <option value="">{{ __('Select Department') }}</option>
+
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('DepartmentId')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         {{-- insert email details --}}
                         <div class="row">
                             {{-- employee email --}}
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="Email">{{ __('Email') }}</label>
                                     <input type="text" name="Email" id="Email"
                                         class="form-control @error('Email') is-invalid @enderror"
-                                        value="{{ old('Email') }}" placeholder="{{ __('Email') }}">
+                                        value="{{ old('Email') }}" placeholder="Email">
                                     {{-- validation --}}
                                     @error('Email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
+                            {{-- employee Mobile --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="Mobile">{{ __('Mobile') }}</label>
+                                    <input type="text" name="Mobile" id="Mobile"
+                                        class="form-control @error('Mobile') is-invalid @enderror"
+                                        value="{{ old('Mobile') }}" placeholder="Mobile">
+                                    {{-- validation --}}
+                                    @error('Mobile')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             {{-- employee type --}}
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="EmployeeType">{{ __('Employee Type') }}</label>
                                     <select name="EmployeeType" id="EmployeeType"
@@ -113,11 +176,11 @@
                     <h3 class="card-title">{{ __('Create Email (Upload File)') }}</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('emails.saveUpload') }}" method="POST" enctype="multipart/form-data"
+                    <form action="{{ route('emails.saveUploadZ') }}" method="POST" enctype="multipart/form-data"
                         id="uploadForm" class="d-inline">
                         @csrf
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="SurveyIdU">{{ __('Survey') }}</label>
                                     <select name="SurveyIdU" id="SurveyIdU"
@@ -135,7 +198,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="ClientIdU">{{ __('Client') }}</label>
                                     <select name="ClientIdU" id="ClientIdU"
@@ -149,10 +212,60 @@
                                     </select>
                                 </div>
                             </div>
+                            {{-- select sector --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="SectorId_up">{{ __('Sector') }}</label>
+                                    <select name="SectorId_up" id="SectorId_up" onchange="setUpComapny('SectorId_up','CompanyId_up')"
+                                        class="form-control @error('SectorId_up') is-invalid @enderror">
+                                        <option value="">{{ __('Select Sector') }}</option>
+                                        @foreach ($sectors as $sector)
+                                        <option value="{{ $sector->id }}" @if (old('SectorId_up')==$sector->id) selected
+                                            @endif>
+                                            {{ app()->getLocale()=='ar'? $sector->sector_name_ar:$sector->sector_name_en
+                                            }}</option>
+                                        @endforeach
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('SectorId_up')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- select company --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="CompanyId_up">{{ __('Company') }}</label>
+                                    <select name="CompanyId_up" id="CompanyId_up" onchange="setUpDep('CompanyId_up','DepartmentId_up')"
+                                        class="form-control @error('CompanyId_up') is-invalid @enderror">
+                                        <option value="">{{ __('Select Company') }}</option>
+
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('CompanyId_up')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- select department --}}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="DepartmentId_up">{{ __('Department') }}</label>
+                                    <select name="DepartmentId_up" id="DepartmentId_up"
+                                        class="form-control @error('DepartmentId_up') is-invalid @enderror">
+                                        <option value="">{{ __('Select Department') }}</option>
+
+                                    </select>
+                                    {{-- validation --}}
+                                    @error('DepartmentId_up')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group">
-                                <label for="EmailFile">Upload File</label>
+                                <label for="EmailFile">{{ __('Upload File') }}</label>
                                 <input type="file" name="EmailFile" id="EmailFile"
                                     class="form-control @error('EmailFile') is-invalid @enderror">
                                 {{-- validation --}}
@@ -180,7 +293,7 @@
                     <form action="{{ route('emails.copy') }}" method="POST" class="d-inline" id="CopyFrom">
                         @csrf
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="SurveyIdC">{{ __('Old Survey') }}</label>
                                     <select name="SurveyIdC" id="SurveyIdC"
@@ -200,7 +313,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="ClientIdC">{{ __('Client') }}</label>
                                     <select name="ClientIdC" id="ClientIdC"
@@ -216,9 +329,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label for="NewSurveyIdC">New Survey</label>
+                                    <label for="NewSurveyIdC">{{ __('New Survey') }}</label>
                                     <select name="NewSurveyIdC" id="NewSurveyIdC"
                                         class="form-control @error('NewSurveyIdC') is-invalid @enderror" disabled>
                                         <option value="">{{ __('Select Survey') }}</option>
@@ -267,5 +380,76 @@
         $("#SurveyIdU").attr('disabled', false);
         $("#ClientIdU").attr('disabled', false);
     })
+    // on sector select update company select
+    // $('#SectorId').change(function(){
+    //     var SectorId = $(this).val();
+    //     if(SectorId){
+    //         $.ajax({
+    //             type:"GET",
+    //             url:"{{ url('companies/getForSelect') }}/"+SectorId,
+    //             success:function(res){
+    //                 if(res){
+    //                     $("#CompanyId").empty();
+    //                     $("#CompanyId").append('<option value="">{{ __("Select Company") }}</option>');
+    //                     $.each(res,function(key,value){
+    //                         $("#CompanyId").append('<option value="'+value.id+'">'+value.company_name_en+'</option>');
+    //                     });
+    //                 }else{
+    //                     $("#CompanyId").empty();
+    //                 }
+    //             }
+    //         });
+    //     }else{
+    //         $("#CompanyId").empty();
+    //     }
+    // });
+    setUpComapny =(sec,comp) =>{
+        var SectorId = $("#"+sec).val();
+        if(SectorId){
+            $.ajax({
+                type:"GET",
+                url:"{{ url('companies/getForSelect') }}/"+SectorId,
+                success:function(res){
+                    if(res){
+                        $("#"+comp).empty();
+                        $("#"+comp).append('<option value="">{{ __("Select Company") }}</option>');
+                        $.each(res,function(key,value){
+                            $("#"+comp).append('<option value="'+value.id+'">'+value.company_name_en+'</option>');
+                        });
+                    }else{
+                        $("#"+comp).empty();
+                    }
+                }
+            });
+        }else{
+            $("#"+comp).empty();
+        }
+    }
+    // on Company select update department select
+    setUpDep=(comp,dep)=>{
+
+
+        var CompanyId = $("#"+comp).val();
+        console.log(CompanyId);
+        if(CompanyId){
+            $.ajax({
+                type:"GET",
+                url:"{{ url('departments/getForSelect') }}/"+CompanyId,
+                success:function(res){
+                    if(res){
+                        $("#"+dep).empty();
+                        $("#"+dep).append('<option value="">{{ __("Select Department") }}</option>');
+                        $.each(res,function(key,value){
+                            $("#"+dep).append('<option value="'+value.id+'">'+value.dep_name_en+'</option>');
+                        });
+                    }else{
+                        $("#"+dep).empty();
+                    }
+                }
+            });
+        }else{
+            $("#DepartmentId").empty();
+        }
+    }
 </script>
 @endsection

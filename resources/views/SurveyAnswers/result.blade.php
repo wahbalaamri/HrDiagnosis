@@ -6,138 +6,244 @@
 {{-- content --}}
 @section('content')
 {{-- container --}}
-<div class="container-fluid pt-5 mt-5">
-    <div class="row">
-        <div class="col-2">
+<div class="container pt-5 mt-5">
+    <div class="">
+        <div class="col-12 mt-5 pt-5 {{ App()->getLocale()=='ar' ? 'custom-fixed-top-rtl' : 'custom-fixed-top' }}">
             <!-- side bar menu -->
             @include('layouts.sidebar')
         </div>
-        <div class="col-10" id="finalResult">
-            <div id="Function" class="card" style="font-family: emoji;letter-spacing: 0.065rem;">
+        <div class="col-12" id="finalResult">
+            <div class="card">
+                {{-- card header --}}
+                <div class="card-header">
+                    <h3>{{ __('Survey Answers') }}</h3>
+                </div>
+                {{-- card body --}}
+                <div class="card-body text-center">
+                    {{-- survey divs --}}
+                    <div class="w-50">
+                        @if($Resp_overAll_res>0)
+                        <div class="col-5 text-end function-lable mr-3">{{ __('Total Answers') }} {{ $overAll_res }} {{
+                            __('out of') }} {{
+                            $Resp_overAll_res }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($overAll_res/$Resp_overAll_res)<0.5) bg-danger @elseif(($overAll_res/$Resp_overAll_res)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($overAll_res/$Resp_overAll_res)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($overAll_res/$Resp_overAll_res)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($overAll_res/$Resp_overAll_res)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_leadersResp>0)
+                        <div class="col-5 text-end function-lable mr-3">{{ __('Total Leaders Answers') }} {{
+                            $leaders_res }} {{ __('out of') }}
+                            {{ $prop_leadersResp }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($leaders_res/$prop_leadersResp)<0.5) bg-danger @elseif(($leaders_res/$prop_leadersResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($leaders_res/$prop_leadersResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($leaders_res/$prop_leadersResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($leaders_res/$prop_leadersResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_hrResp>0)
+                        <div class="col-5 text-end function-lable mr-3">{{ __('Total HR Answers') }} {{ $hr_res }} {{
+                            __('out of') }} {{
+                            $prop_hrResp }}</div>
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($hr_res/$prop_hrResp)<0.5) bg-danger @elseif(($hr_res/$prop_hrResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar" style="width: {{ ($hr_res/$prop_hrResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($hr_res/$prop_hrResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($hr_res/$prop_hrResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        @if($prop_empResp>0)
+                        <div class="col-5 text-end function-lable mr-3">{{ __('Total Employee Answers') }} {{ $emp_res
+                            }} {{ __('out of') }} {{
+                            $prop_empResp }}</div>
+
+                        <div class="col-9 text-start function-progress">
+                            <div class="progress" style="height: 31px">
+                                <div class="progress-bar @if(($emp_res/$prop_empResp)<0.5) bg-danger @elseif(($emp_res/$prop_empResp)==1) bg-success @else bg-warning @endif"
+                                    role="progressbar"
+                                    style="width: {{ ($emp_res/$prop_empResp)*100 }}%; font-size: 1rem"
+                                    aria-valuenow="{{ ($emp_res/$prop_empResp)*100 }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ ($emp_res/$prop_empResp)*100 }}%</div>
+                            </div>
+                        </div>
+                        @endif
+                        {{-- end survey divs --}}
+                    </div>
+                </div>
+            </div>
+            <div id="Function" class="card mt-4" style="letter-spacing: 0.065rem;">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('Results') }}</h3>
                 </div>
                 <div class="card-body text-capitalize">
-
-                    <div class="col-{{ count($functions) }} text-start h3 text-white p-3" style="background-color: #376092;border-radius: 45px 45px 45px 45px;width: 89%; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                        box-shadow: 5px 5px 20px 5px #ABABAB;">{{ __('Key functions') }}
-                    </div>
-                    <div class="row  padding-left-10px">
-                        @foreach ($functions as $function )
-                        <div class="text-center text-white m-1" style="background-color: #376092; width:10.5%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                        box-shadow: 5px 5px 20px 5px #ABABAB; font-size: 0.79rem">
-                            {{ app()->getLocale()=='ar'?$function->FunctionTitleAr:$function->FunctionTitle }}
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="row" style="width: 100%">
-                        @foreach ($functions as $function )
-                        <?php $firstofFirstLoop= $loop->first ; ?>
-                        <div class="col-1 m-1 justify-content-center" style="width: 10.5%; font-size: 0.79rem">
-                            @foreach( $overall_Practices as $overall_Practice)
-                            @if ( $overall_Practice['function_id'] == $function->id)
-                            <div class="text-center @if(!$loop->first) mt-1 @endif @if($firstofFirstLoop) pl-1 pr-1 pb-1 @else p-2 m-1 @endif @if($overall_Practice['weight']<=0.6) bg-danger text-white @elseif (($overall_Practice['weight']>0.6)&&($overall_Practice['weight']<=0.8)) bg-warning text-black @else bg-success text-white @endif"
-                                style=" width:125%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
-                                box-shadow: 5px 5px 20px 5px #ABABAB;">
-                                {{ $overall_Practice['name'] }} {{-- {{ $overall_Practice['weight'] }} --}}
+                    <div class="row">
+                        <div class="col-1" style="max-width: 45px;"></div>
+                        <div class="col-11">
+                            <div class="col-{{ count($functions) }} {{ app()->getLocale()=='ar'?'text-right':'text-left' }} h3 text-white p-3 bg-info"
+                                style="border-radius: 45px 45px 45px 45px;width: 89%; -webkit-box-shadow: 0px 0px 5px 1px #ABABAB;
+                        box-shadow: 0px 0px 5px 1px #ABABAB;">{{ __('Key functions') }}
                             </div>
-                            @endif
-                            @endforeach
                         </div>
-                        @endforeach
+                    </div>
+                    <div class="row">
+                        <div class="col-1" style="max-width: 45px;"></div>
+                        <div class="col-11">
+                            <div class="row  padding-left-10px">
+                                @foreach ($functions as $function )
+                                <div class="text-center text-white m-1 bg-info" style="width:10.5%; border-radius: 10px; -webkit-box-shadow: 0px 0px 5px 1px #ABABAB;
+                        box-shadow: 0px 0px 5px 1px #ABABAB; font-size: 0.79rem">
+                                    {{ app()->getLocale()=='ar'?$function->FunctionTitleAr:$function->FunctionTitle }}
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1" style="background-color: #DCE6F2;    background-color: #DCE6F2;
+                        writing-mode: vertical-lr;
+                        transform: rotate(180deg);
+                        min-width: 19px;
+                        max-width: 45px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;color:#376092; font-size: 1.5rem; font-weight: bold">{{ __('Practices')
+                            }}</div>
+                        <div class="col-11">
+                            <div class="row" style="width: 100%">
+                                @foreach ($functions as $function )
+                                <?php $firstofFirstLoop= $loop->first ; ?>
+                                <div class="col-1 m-1 justify-content-center pb-1 pt-1"
+                                    style="width: 10.5%; font-size: 0.79rem">
+                                    @foreach( $overall_Practices as $overall_Practice)
+                                    @if ( $overall_Practice['function_id'] == $function->id)
+                                    <div class="text-center @if(!$loop->first) mt-1 p-2 @endif @if($firstofFirstLoop) p-2 @else p-2 m-1 @endif @if($overall_Practice['weightz']<=0.6) bg-danger text-white @elseif (($overall_Practice['weightz']>0.6)&&($overall_Practice['weightz']<=0.8)) bg-warning text-black @else bg-success text-white @endif"
+                                        style=" width:125%; border-radius: 10px; -webkit-box-shadow: 5px 5px 20px 5px #ABABAB;
+                                box-shadow: 5px 5px 20px 5px #ABABAB;">
+                                        {{ $overall_Practice['name'] }} {{-- {{ $overall_Practice['weightz'] }} --}}
+                                    </div>
+                                    @endif
+                                    @endforeach
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <button id="FunctionDownload" onclick="downloadResult('Function','Function')"
-                class="btn btn-success mt-1">Download Function</button>
-            <div id="key" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
+                class="btn btn-success mt-1">{{ __('Download Function') }}</button>
+            <div id="key" class="card mt-4" style="letter-spacing: 0.065rem;">
                 <div class="card-header">
-                    <h3 class="card-title">Dashboard</h3>
+                    <h3 class="card-title">{{ __('Dashboard') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-3 m-1 rounded text-center h3 p-3"
-                            style="background-color: #DCE6F2 ; color:#376092 !important;">Overall Performance
+                            style="background-color: #DCE6F2 ; color:#376092 !important;">{{ __('Overall Performance')
+                            }}
                             <div class="mt-5">
                                 <div class="circle-wrap">
                                     <div class="circle">
 
                                         <div class="mask half">
-                                            <div class="fill-{{ $overallResult }}"></div>
+                                            <div class="fill-{{ $overallResultz }}"></div>
                                         </div>
 
-                                        <div class="mask full-{{ $overallResult }}">
-                                            <div class="fill-{{ $overallResult }}"></div>
+                                        <div class="mask full-{{ $overallResultz }}">
+                                            <div class="fill-{{ $overallResultz }}"></div>
                                         </div>
-                                        <div class="inside-circle"> {{ $overallResult }}%<p>Performance score</p>
+                                        <div class="{{app()->getLocale()=='ar'?'inside-circle-rtl':'inside-circle'}}">
+                                            {{ $overallResultz }}%<p>{{ __('Performance score') }}</p>
                                         </div>
 
 
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    Overall performance of HR functionality,
+                                    {{ __('Overall performance of HR functionality') }}
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 m-1 rounded text-center h3 p-3"
-                            style="background-color: #DCE6F2 ; color:#376092 !important;">Key improvement areas
+                            style="background-color: #DCE6F2 ; color:#376092 !important;">{{ __('Key improvement areas')
+                            }}
+                            <?php $hasWPoints=false; ?>
+                            @for ($i=0; $i<count($asc_perform); $i++) <div class="mt-5 text-start">
 
-                            @for ($i=0; $i<5; $i++) <div class="mt-5 text-start">
-                                <span class="h5"> {{ $asc_perform[$i]['function'] }}</span>
-
-                                <div class="progress" style="height: 31px">
-                                    <div class="progress-bar
-                                    @if($asc_perform[$i]['performance']<=60) bg-danger @elseif($asc_perform[$i]['performance']>60 && $asc_perform[$i]['performance']<80) bg-warning @else bg-success @endif"
-                                        role="progressbar"
-                                        style="width: {{ $asc_perform[$i]['performance']  }}%; font-size: 1rem"
-                                        aria-valuenow="{{ $asc_perform[$i]['performance']  }}" aria-valuemin="0"
-                                        aria-valuemax="100">{{ $asc_perform[$i]['performance'] }}%
+                                @if($asc_perform[$i]['performancez']<=60) <span class="h5"> {{
+                                    $asc_perform[$i]['function'] }}</span>
+                                    <div class="progress" style="height: 31px">
+                                        <div class="progress-bar
+                                    @if($asc_perform[$i]['performancez']<=60) bg-danger @elseif($asc_perform[$i]['performancez']>60 && $asc_perform[$i]['performancez']<80) bg-warning @else bg-success @endif"
+                                            role="progressbar"
+                                            style="width: {{ $asc_perform[$i]['performancez']  }}%; font-size: 1rem;min-width: 2em;"
+                                            aria-valuenow="{{ $asc_perform[$i]['performancez']  }}" aria-valuemin="2"
+                                            aria-valuemax="100">{{ $asc_perform[$i]['performancez'] }}%
+                                        </div>
                                     </div>
-                                </div>
+                                    <?php $hasWPoints=true; ?>
+                                    @endif
                         </div>
 
                         @endfor
-
+                        @if (!$hasWPoints)
+                        <span class="h5" style="font-size: 2rem"> {{ __('NIL') }}</span>
+                        @endif
                     </div>
                     <div class="col-4 m-1 rounded text-center h3 p-3"
-                        style="background-color: #DCE6F2 ; color:#376092 !important;">Strength Areas
-                        @for($i=(count($asc_perform)-1); $i>=(count($asc_perform)-3); $i--) <div
-                            class="mt-5 text-start">
+                        style="background-color: #DCE6F2 ; color:#376092 !important;">{{ __('Strength Areas') }}
+                        <?php $strengthcounter = 0; ?>
+                        @for($i=(count($asc_perform)-1); $i>=0; $i--) <div class="mt-5 text-start">
                             @if($asc_perform[$i]['performance'] >80)
+                            <?php $strengthcounter++; ?>
                             <span class="h5"> {{ $asc_perform[$i]['function'] }}</span>
                             <div class="progress" style="height: 31px">
-                                <div class="progress-bar @if($asc_perform[$i]['performance']<=60) bg-danger @elseif($asc_perform[$i]['performance']>60 && $asc_perform[$i]['performance']<80) bg-warning @else bg-success @endif"
+                                <div class="progress-bar @if($asc_perform[$i]['performancez']<=60) bg-danger @elseif($asc_perform[$i]['performancez']>60 && $asc_perform[$i]['performancez']<80) bg-warning @else bg-success @endif"
                                     role="progressbar"
-                                    style="width: {{ $asc_perform[$i]['performance']  }}%; font-size: 1rem"
-                                    aria-valuenow="{{ $asc_perform[$i]['performance']  }}" aria-valuemin="0"
-                                    aria-valuemax="100">{{ $asc_perform[$i]['performance'] }}%</div>
+                                    style="width: {{ $asc_perform[$i]['performancez']  }}%; font-size: 1rem;min-width: 2em;"
+                                    aria-valuenow="{{ $asc_perform[$i]['performancez']  }}" aria-valuemin="0"
+                                    aria-valuemax="100">{{ $asc_perform[$i]['performancez'] }}%</div>
                             </div>
                             @endif
+
                         </div>
                         @endfor
+                        @if ($strengthcounter==0)
+                        <span class="h5" style="font-size: 2rem"> {{ __('NIL') }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <span class="legend-result"><b>Legend:</b></span> <span class="legend-levels"><b> Low:</b></span>
-                <=60% – <span class="legend-levels"><b>Medium:</b></span> > 60% to 80% – <span
-                        class="legend-levels"><b>High:</b></span> >80%
+                <span class="legend-result"><b>{{ __('Legend:') }}</b></span> <span class="legend-levels"><b> {{
+                        __('Low:') }}</b></span>
+                <=60% – <span class="legend-levels"><b>{{ __('Medium:') }}</b></span> > {{ __('60% to 80%') }} – <span
+                        class="legend-levels"><b>{{ __('High:') }}</b></span> >80%
 
             </div>
         </div>
-        <button id="keyDownload" onclick="downloadResult('key','Dashboard')" class="btn btn-success mt-1">Download
-            key</button>
-        <div id="Laverages" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
+        <button id="keyDownload" onclick="downloadResult('key','Dashboard')" class="btn btn-success mt-1">{{__('Download
+            key')}}</button>
+        <div id="Laverages" class="card mt-4" style="letter-spacing: 0.065rem;">
             <div class="card-header">
-                <h3 class="card-title ">Averages by functions - Leadership
+                <h3 class="card-title ">{{ __('Averages by functions - Leadership') }}
                 </h3>
             </div>
             <div class="card-body" style="background-color: #DCE6F2 ; color:#376092 !important;">
                 <div class="row text-center">
                     <div class="m-1 rounded text-center h5 p-3" style="font-size: 1.7rem">
-                        People management performance – <b style="font-size: 1.5rem">Leadership</b> view average scores
-                        by people functions
+                        {{ __('People management performance – Leadership view average scores by people functions') }}
                     </div>
                 </div>
                 <div class="row">
@@ -147,11 +253,13 @@
                     <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
                     <div class="col-9 text-start function-progress">
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
                     </div>
                     @endforeach
@@ -159,17 +267,16 @@
             </div>
         </div>
         <button id="averagesDownload" onclick="downloadResult('Laverages','Leadership_View_Average')"
-            class="btn btn-success mt-1">Download averages</button>
-        <div id="HRaverages" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
+            class="btn btn-success mt-1">{{ __('Download averages') }}</button>
+        <div id="HRaverages" class="card mt-4" style="letter-spacing: 0.065rem;">
             <div class="card-header">
-                <h3 class="card-title ">Averages by functions - HR Team
+                <h3 class="card-title ">{{ __('Averages by functions - HR Team') }}
                 </h3>
             </div>
             <div class="card-body" style="background-color: #DCE6F2 ; color:#376092 !important;">
                 <div class="row text-center">
                     <div class="m-1 rounded text-center h5 p-3" style="font-size: 1.7rem">
-                        People management performance – <b style="font-size: 1.5rem">HR Team</b> view Average scores by
-                        people functions
+                        {{ __('People management performance – HR Team view Average scores by people functions') }}
                     </div>
                 </div>
                 <div class="row">
@@ -178,13 +285,19 @@
 
                     <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
                     <div class="col-9 text-start function-progress">
+                        {{-- @if($performence['performance']>0) --}}
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
+                        {{-- @else
+                        not applicable
+                        @endif --}}
                     </div>
                     @endforeach
                     {{-- <div class="col-3 text-end function-lable">Function 6</div>
@@ -247,32 +360,38 @@
             </div>
         </div>
         <button id="averagesDownload" class="btn btn-success mt-1"
-            onclick="downloadResult('HRaverages','HR_View_Average')">Download averages</button>
-        <div id="Empaverages" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
+            onclick="downloadResult('HRaverages','HR_View_Average')">{{ __('Download averages') }}</button>
+        <div id="Empaverages" class="card mt-4" style="letter-spacing: 0.065rem;">
             <div class="card-header">
-                <h3 class="card-title ">Averages by functions - Employees
+                <h3 class="card-title ">{{ __('Averages by functions - Employees') }}
                 </h3>
             </div>
             <div class="card-body" style="background-color: #DCE6F2 ; color:#376092 !important;">
                 <div class="row text-center">
                     <div class="m-1 rounded text-center h5 p-3" style="font-size: 1.7rem">
-                        People management performance – <b style="font-size: 1.5rem">Employee</b> view Average scores by
-                        people functions
+                        {{ __('People management performance – Employee view Average scores by people functions') }}
                     </div>
                 </div>
                 <div class="row">
                     @foreach ($sorted_emp_performences as $performence)
 
 
-                    <div class="col-3 text-end function-lable">{{ $performence['function'] }}</div>
-                    <div class="col-9 text-start function-progress">
+                    <div class="col-3 {{ App()->getLocale()=='ar'?'text-left':'text-right' }} function-lable">{{
+                        $performence['function'] }}</div>
+                    <div class="col-9 {{ App()->getLocale()=='en'?'text-left':'text-right' }} function-progress">
+                        @if($performence['performance']>0)
                         <div class="progress" style="height: 31px">
-                            <div class="progress-bar @if($performence['performance']>80 && $performence['performance']<=100) bg-success @elseif($performence['performance']>60 && $performence['performance']<=80) bg-warning @else bg-danger @endif"
-                                role="progressbar" style="width: {{ $performence['performance'] }}%; font-size: 1rem"
-                                aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar @if($performence['performancez']>80 && $performence['performancez']<=100) bg-success @elseif($performence['performancez']>60 && $performence['performancez']<=80) bg-warning @else bg-danger @endif"
+                                role="progressbar"
+                                style="width: {{ $performence['performancez'] }}%; font-size: 1rem;min-width: 2em;"
+                                aria-valuenow="{{ $performence['performancez'] }}" aria-valuemin="0"
+                                aria-valuemax="100">
                                 {{
-                                $performence['performance'] }}%</div>
+                                $performence['performancez'] }}%</div>
                         </div>
+                        @else
+                        {{ __('not applicable') }}
+                        @endif
                     </div>
                     @endforeach
 
@@ -280,23 +399,21 @@
             </div>
         </div>
         <button id="averagesDownload" class="btn btn-success mt-1"
-            onclick="downloadResult('Empaverages','Employee_View_Average')">Download averages</button>
+            onclick="downloadResult('Empaverages','Employee_View_Average')">{{ __('Download averages') }}</button>
 
-        <div id="heatmap" class="card mt-4" style="font-family: emoji;letter-spacing: 0.065rem;">
+        <div id="heatmap" class="card mt-4" style="letter-spacing: 0.065rem;">
             <div class="card-header">
-                <h3 class="card-title ">High level heat map
+                <h3 class="card-title ">{{ __('High level heat map') }}
                 </h3>
             </div>
             <div class="card-body" style="background-color: #DCE6F2 ; color:#376092 !important;">
                 <div class="row text-center">
                     <div class="m-1 rounded text-center h5 p-3 text-danger" style="font-size: 1.7rem">
-                        High level heat map – Leadership view Priorities vs Performance in key People management
-                        functions
+                        {{ __('High level heat map – Leadership view Priorities vs Performance in key People management functions') }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3 text-center heat-map heat-map-priority heat-map-priority-v">Priority by
-                        leaders</div>
+                    <div class="col-3 text-center heat-map heat-map-priority heat-map-priority-v">{{__('Priority by leaders') }}</div>
                     <div class="col-9 heat-map"></div>
 
                     @for ($i = 0; $i < 3; $i++) <div
@@ -304,15 +421,15 @@
                         <span>
                             @switch($i)
                             @case(0)
-                            High
+                            {{ __('High') }}
                             @break
 
                             @case(1)
-                            Medium
+                            {{ __('Medium') }}
                             @break
 
                             @case(2)
-                            Low
+                            {{ __('Low') }}
                             @break
 
                             @default
@@ -327,7 +444,7 @@
                             @if ($j == 0)
                             <ul>
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance'] <=0.6)
+                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performancez'] <=0.6)
                                     <li class="text-white">{{ $pri['function'] }}
                                     </li>
                                     @endif
@@ -338,8 +455,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance']> 0.6
-                                    && $pri['performance'] <= 0.8) <li class="text-white">{{ $pri['function'] }}
+                                @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performancez']> 0.6
+                                    && $pri['performancez'] <= 0.8) <li class="text-white">{{ $pri['function'] }}
                                         </li>
                                         @endif
                                         @endif
@@ -351,8 +468,8 @@
 
                                 @foreach ($priorities as $pri)
                                 ffff
-                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.6) <li
-                                    class="text-white">{{ $pri['function'] }}</li>
+                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez'] <=0.6)
+                                    <li class="text-white">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -363,8 +480,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.6) <li
-                                    class="text-white">{{ $pri['function'] }}</li>
+                                @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez'] <=0.6)
+                                    <li class="text-white">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -382,8 +499,8 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performance']> 0.6 &&
-                                $pri['performance'] <= 0.8) <li class="text-black">{{ $pri['function'] }}</li>
+                            @if ($pri['priority'] >0.6 && $pri['priority'] <0.8) @if ($pri['performancez']> 0.6 &&
+                                $pri['performancez'] <= 0.8) <li class="text-black">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -394,7 +511,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance'] <=0.6) <li class="text-black">
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez'] <=0.6) <li class="text-black">
                                 {{$pri['function'] }}</li>
                                 @endif
                                 @endif
@@ -405,7 +522,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance']> 0.6 && $pri['performance'] <= 0.8)
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez']> 0.6 && $pri['performancez'] <= 0.8)
                                     <li class="text-black">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
@@ -424,7 +541,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.8 && $pri['priority'] <= 1) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] >0.8 && $pri['priority'] <= 1) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}</li>
                                 @endif
                                 @endif
@@ -437,7 +554,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] >0.6 && $pri['priority'] < 0.8) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] >0.6 && $pri['priority'] < 0.8) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}
                                 </li>
                                 @endif
@@ -451,7 +568,7 @@
                         <ul>
 
                             @foreach ($priorities as $pri)
-                            @if ($pri['priority'] <=0.6) @if ($pri['performance']> 0.8)
+                            @if ($pri['priority'] <=0.6) @if ($pri['performancez']> 0.8)
                                 <li class="text-white">{{ $pri['function'] }}
                                 </li>
                                 @endif
@@ -472,9 +589,9 @@
             </div>
             <div class="col-9 heat-map">
                 <div class="row">
-                    <div class="heat-map-bottom-label">Low</div>
-                    <div class="heat-map-bottom-label">Medium</div>
-                    <div class="heat-map-bottom-label">High</div>
+                    <div class="heat-map-bottom-label">{{ __('Low') }}</div>
+                    <div class="heat-map-bottom-label">{{ __('Medium') }}</div>
+                    <div class="heat-map-bottom-label">{{ __('High') }}</div>
                 </div>
             </div>
             <div class="col-3 text-end heat-map">
@@ -482,30 +599,30 @@
             </div>
             <div class="col-9 heat-map text-center p-3">
                 <div class="heat-map-bottom-title">
-                    People management performance score by leaders
+                    {{ __('People management performance score by leaders') }}
                 </div>
             </div>
         </div>
     </div>
     {{-- card footer --}}
     <div class="card-footer">
-        <span class="legend-result"><b>Legend:</b></span> <span class="legend-levels"><b> Low:</b></span>
-        <=60% – <span class="legend-levels"><b>Medium:</b></span> > 60% to 80% – <span
-                class="legend-levels"><b>High:</b></span> >80%
+        <span class="legend-result"><b>{{ __('Legend:') }}</b></span> <span class="legend-levels"><b> {{ __('Low:') }}</b></span>
+        <=60% – <span class="legend-levels"><b>{{ __('Medium:') }}</b></span> > {{ __('60% to 80%') }} – <span
+                class="legend-levels"><b>{{ __('High:') }}</b></span> >80%
 
     </div>
 </div>
 <button id="heatmapDownload" class="btn btn-success mt-1" onclick="downloadResult('heatmap','heatmap')">
-    Download heatmap
+    {{ __('Download heatmap') }}
 </button>
-<div class="card mt-4" id="Linear" style="font-family: emoji;letter-spacing: 0.065rem;">
+<div class="card mt-4" id="Linear" style="letter-spacing: 0.065rem;">
     <div class="card-header">
-        <h4 class="card-title">Linear chart</h4>
+        <h4 class="card-title">{{ __('Linear chart') }}</h4>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-12">
-                <div class="chart-container">
+            <div class="d-flex justify-content-center">
+                <div class="chart-container w-75">
                     <canvas id="myChart" width="400" height="400"></canvas>
                 </div>
             </div>
@@ -514,33 +631,30 @@
     {{-- <div id="img-out"></div> --}}
     {{-- <button id="pptDownload" class="btn btn-success">Download PPT</button> --}}
 </div>
-<button id="heatmapDownload" class="btn btn-success mt-1" onclick="downloadResult('Linear','Linear')">Download
-    Chart</button>
-<div class="card mt-4" id="Consolidated" style="font-family: emoji;letter-spacing: 0.065rem;">
+<button id="heatmapDownload" class="btn btn-success mt-1" onclick="downloadResult('Linear','Linear')">
+    {{ __('Download Chart') }}</button>
+<div class="card mt-4" id="Consolidated" style="letter-spacing: 0.065rem;">
     <div class="card-header">
-        <h4 class="card-title">Consolidated</h4>
+        <h4 class="card-title">{{ __('Consolidated') }}</h4>
     </div>
-    <div class="card-body" style="font-family: emoji;letter-spacing: 0.065rem;">
+    <div class="card-body" style="letter-spacing: 0.065rem;">
         <div class="row">
             <div class="col-12">
-                Consolidated findings by function
+                {{ __('Consolidated findings by function') }}
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-1 m-1 text-white" style="font-size: 0.84rem;
-    border: 4px solid #376092;
-    background-color: #376092;
+            <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
     text-align: center;">
-                <span>Functions</span>
+                <span>{{ __('Functions') }}</span>
             </div>
             @foreach ($asc_perform as $perfomr)
-            <div class="m-1 text-white" style="width: 10.4% !important; font-size: 0.8rem; border: 4px solid #376092;
-    background-color: #376092;
+            <div class="m-1 text-white bg-info" style="width: 10.4% !important; font-size: 0.8rem;
             border-radius: 10px;
             display: flex;
             justify-content: center;
@@ -552,41 +666,39 @@
             @endforeach
         </div>
         <div class="row">
-            <div class="col-sm-1 m-1 text-white" style="font-size: 0.84rem;
-    border: 4px solid #376092;
-    background-color: #376092;
+            <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
     text-align: center;">
-                <span style="hyphens: auto;">Improvement need
+                <span style="hyphens: auto;">{{ __('Improvement need') }}
                 </span>
             </div>
             @foreach ($asc_perform as $perfomr)
-            <div class="m-1 @if($perfomr['performance']<=60) bg-danger text-white @elseif($perfomr['performance']>80) bg-success text-white @else bg-warning @endif"
+            <div class="m-1 @if($perfomr['performancez']<=60) bg-danger text-white @elseif($perfomr['performancez']>80) bg-success text-white @else bg-warning @endif"
                 style="width: 10.4% !important; font-size: 0.8rem border-radius: 10px;
                 ">
-                @if($perfomr['performance']<=60) Critical to improve @elseif($perfomr['performance']>80) No Improvement
-                    Needed
-                    @else Need to improve
+                @if($perfomr['performancez']<=60) {{ __('Critical to improve') }} @elseif($perfomr['performancez']>80)
+                    No
+                    {{ __('Improvement Needed') }}
+                    @else {{ __('Need to improve') }}
                     @endif
             </div>
             @endforeach
         </div>
         <div class="row">
-            <div class="col-sm-1 m-1 text-white" style="font-size: 0.84rem;
-            border: 4px solid #376092;
-            background-color: #376092;
+            <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
+
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-content: center;
             flex-direction: column;
             text-align: center;">
-                <span>Performance rating by
-                    Leaders, Employees and HR Team
+                <span>
+                    {{ __('Performance rating by Leaders, Employees and HR Team') }}
                 </span>
             </div>
             @foreach ($asc_perform as $perfomr)
@@ -598,7 +710,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/LeadersIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $leader['performance'] }}% <br>
+                    {{ $leader['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -610,7 +722,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/HRIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $hr['performance'] }}% <br>
+                    {{ $hr['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -622,7 +734,7 @@
                     <div class="col-md-5">
                         <img src="{{ asset('assets/img/icon/EmployeIcon.png') }}" height="30" width="35" alt="">
                     </div>
-                    {{ $emp['performance'] }}% <br>
+                    {{ $emp['performancez'] }}% <br>
                 </div>
                 @break;
                 @endif
@@ -631,16 +743,14 @@
             @endforeach
         </div>
         <div class="row">
-            <div class="col-sm-1 m-1 text-white" style="font-size: 0.84rem;
-    border: 4px solid #376092;
-    background-color: #376092;
+            <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
     text-align: center;">
-                <span>Priority
+                <span>{{ __('Priority') }}
                 </span>
             </div>
             @foreach ($asc_perform as $perfomr)
@@ -655,8 +765,8 @@
     text-align: center;
     height: 2rem;
     font-size: 1rem;">
-                    @if( $pro['priority']<=0.6) Low @elseif($pro['priority']>0.6 && $pro['priority']<=0.8) Medium @else
-                            High @endif </div>
+                    @if( $pro['priority']<=0.6) {{ __('Low') }} @elseif($pro['priority']>0.6 && $pro['priority']<=0.8) {{ __('Medium') }} @else
+                            {{ __('High') }} @endif </div>
 
                             @break
                             @endif
@@ -665,9 +775,7 @@
                 @endforeach
             </div>
             <div class="row">
-                <div class="col-sm-1 m-1 text-white" style="font-size: 0.84rem;
-    border: 4px solid #376092;
-    background-color: #376092;
+                <div class="col-sm-1 m-1 bg-info" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -675,7 +783,7 @@
     flex-direction: column;
     text-align: center;">
 
-                    <span>Key improvement areas by practices
+                    <span>{{ __('Key improvement areas by practices') }}
                     </span>
                 </div>
                 @foreach ($asc_perform as $perfomr)
@@ -699,37 +807,39 @@
             </div>
         </div>
         <div class="card-footer">
-            <span class="legend-result"><b>Legend:</b></span> <span class="legend-levels"><b> Leadership:</b></span>
+            <span class="legend-result"><b>{{ __('Legend:') }}</b></span> <span class="legend-levels"><b> {{ __('Leadership:') }}</b></span>
             <img src="{{ asset('assets/img/icon/LeadersIcon.png') }}" height="20" width="25" alt=""> – <span
-                class="legend-levels"><b>HR Team:</b></span> <img src="{{ asset('assets/img/icon/HRIcon.png') }}"
-                height="20" width="25" alt=""> – <span class="legend-levels"><b>Employee:</b></span> <img
+                class="legend-levels"><b>{{ __('HR Team') }}:</b></span> <img src="{{ asset('assets/img/icon/HRIcon.png') }}"
+                height="20" width="25" alt=""> – <span class="legend-levels"><b>{{ __('Employee') }}:</b></span> <img
                 src="{{ asset('assets/img/icon/EmployeIcon.png') }}" height="20" width="25" alt="">
 
         </div>
     </div>
     <button id="heatmapDownload" class="btn btn-success mt-1" style="border-radius: 10px;
     -webkit-box-shadow: 5px 5px 20px 5px #ababab;
-    box-shadow: 5px 5px 20px 5px #ababab;" onclick="downloadResult('Consolidated','Consolidated')">Download
-        Consolidated</button>
+    box-shadow: 5px 5px 20px 5px #ababab;" onclick="downloadResult('Consolidated','Consolidated')">
+    {{ __('Download Consolidated') }}
+</button>
     <div class="row text-start">
         <div class="col-4 p-3 ">
 
             <button id="DownloadAll" class="btn btn-success mt-3" style="border-radius: 10px;
     -webkit-box-shadow: 5px 5px 20px 5px #ababab;
-    box-shadow: 5px 5px 20px 5px #ababab;">Download
-                All Graph</button>
+    box-shadow: 5px 5px 20px 5px #ababab;">
+    {{ __('Download All Graph') }}
+            </button>
         </div>
         <div class="col-4 p-3 ">
 
             <a href="{{ route('surveys.DownloadSurvey',$id) }}" class="btn btn-success mt-3" style="border-radius: 10px;
     -webkit-box-shadow: 5px 5px 20px 5px #ababab;
-    box-shadow: 5px 5px 20px 5px #ababab;">Download Survey Answers</a>
+    box-shadow: 5px 5px 20px 5px #ababab;">{{ __('Download Survey Answers') }}</a>
         </div>
         <div class="col-4 p-3 ">
 
             <a href="{{ route('surveys.DownloadPriorities',$id) }}" class="btn btn-success mt-3" style="border-radius: 10px;
     -webkit-box-shadow: 5px 5px 20px 5px #ababab;
-    box-shadow: 5px 5px 20px 5px #ababab;">Download Priorities Answers</a>
+    box-shadow: 5px 5px 20px 5px #ababab;">{{ __('Download Priorities Answers') }}</a>
         </div>
     </div>
 </div>
@@ -750,17 +860,20 @@
 
 <script>
     Labels= @json($function_Lables);
-    Leaders= @json($leaders_perform_only);
-    hr=@json($hr_perform_only);
+    Leaders= @json($leaders_perform_onlyz);
+    hr=@json($hr_perform_onlyz);
+    // Leaders= @json($leaders_perform_only);
+    // hr=@json($hr_perform_only);
     const ctx = document.getElementById('myChart');
-
+console.log(hr);
+console.log(Leaders);
 const myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
         labels: Labels,
         datasets: [
             {
-            label: 'Leadership responses',
+            label: "{{ __('Leadership responses') }}",
             data: Leaders,
             backgroundColor: [
                 'rgba(0, 74, 159, 1)'//,
@@ -781,7 +894,7 @@ const myChart = new Chart(ctx, {
             borderWidth: 1
         },
             {
-            label: 'HR responses',
+            label: "{{ __('HR responses') }}",
             data: hr,
             backgroundColor: [
                 // 'rgba(255, 99, 132, 0.2)',

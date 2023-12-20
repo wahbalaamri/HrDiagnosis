@@ -34,7 +34,7 @@ class Clients extends Model
 
     public function surveys()
     {
-        return $this->hasMany(Surveys::class);
+        return $this->hasMany(Surveys::class,'ClientId');
     }
 
     public function emails()
@@ -45,5 +45,10 @@ class Clients extends Model
     public function emailContent()
     {
         return $this->belongsTo(EmailContent::class);
+    }
+    //has many sectors
+    public function sectors()
+    {
+        return $this->hasMany(Sectors::class,'client_id');
     }
 }
