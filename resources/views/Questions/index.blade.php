@@ -266,11 +266,13 @@
                                         data-bs-multi-step-form>
                                         @csrf
                                         <div class="progressbar">
-                                            <div class="progress" id="progress"></div>
+                                            <div class="progress-a" id="progress"></div>
 
                                             {{-- <div class="progress-step stpactive" data-title="Intro"></div> --}}
                                             @foreach ($functions as $function)
-                                            <div class="progress-step" data-title="@if (str_contains($function->FunctionTitle,'Head') || str_contains($function->FunctionTitle,'Hand') || str_contains($function->FunctionTitle,'Heart'))
+                                            <div class="progress-step @if ($loop->first)
+                                                stpactive
+                                            @endif" data-title="@if (str_contains($function->FunctionTitle,'Head') || str_contains($function->FunctionTitle,'Hand') || str_contains($function->FunctionTitle,'Heart'))
                                             H{{ $loop->iteration }}
                                             @else
                                             D
@@ -292,6 +294,7 @@
                                         </div>
 
                                         @foreach ( $functions as $function )
+                                        <?php $index=1?>
                                         {{-- if its first --}}
                                         @if ($loop->first)
 
@@ -301,10 +304,10 @@
                                             <div class="my-wizard-continar">
                                                 @endif
                                                 @foreach ($function->functionPractices as $practice)
-
+                                                @if ($practice->practiceQuestions->Respondent==6 && ($user_type==1 ||
+                                                $user_type==2))
                                                 <fieldset>
-                                                    <legend class="mb-5 pb-5 mt-5 pt-5">{{ $loop->iteration
-                                                        }}.@if(app()->getLocale()=='en')
+                                                    <legend class="mb-5 pb-5 mt-5 pt-5">{{ $index++ }}.@if(app()->getLocale()=='en')
                                                         {{$practice->practiceQuestions->Question }}
                                                         @elseif (app()->getLocale()=='ar')
                                                         {{$practice->practiceQuestions->QuestionAr }}
@@ -321,7 +324,7 @@
                                                                     value="1"
                                                                     class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
                                                                 <div class="radio-tile">
-                                                                    <i class="fa-regular fa-face-angry"></i>
+                                                                    {{-- <i class="fa-regular fa-face-angry"></i> --}}
                                                                     <label for="survey">{{ __('Strongly Disagree')
                                                                         }}</label>
                                                                 </div>
@@ -333,7 +336,8 @@
                                                                     value="2"
                                                                     class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
                                                                 <div class="radio-tile">
-                                                                    <i class="fa-regular fa-face-frown-open"></i>
+                                                                    {{-- <i class="fa-regular fa-face-frown-open"></i>
+                                                                    --}}
                                                                     <label for="survey">{{ __('Disagree') }}</label>
                                                                 </div>
                                                             </div>
@@ -344,8 +348,9 @@
                                                                     value="3"
                                                                     class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
                                                                 <div class="radio-tile">
-                                                                    <i class="fa-regular fa-face-meh"></i>
-                                                                    <label for="survey">{{ __('Neutral') }}</label>
+                                                                    {{-- <i class="fa-regular fa-face-meh"></i> --}}
+                                                                    <label for="survey">{{ __('Slightly Disagree')
+                                                                        }}</label>
                                                                 </div>
                                                             </div>
                                                             <div class="input-container text-center">
@@ -354,8 +359,9 @@
                                                                     value="4"
                                                                     class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
                                                                 <div class="radio-tile">
-                                                                    <i class="fa-regular fa-face-smile"></i>
-                                                                    <label for="survey">{{ __('Agree') }}</label>
+                                                                    {{-- <i class="fa-regular fa-face-smile"></i> --}}
+                                                                    <label for="survey">{{ __('Slightly Agree')
+                                                                        }}</label>
                                                                 </div>
                                                             </div>
 
@@ -365,7 +371,21 @@
                                                                     value="5"
                                                                     class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
                                                                 <div class="radio-tile">
-                                                                    <i class="fa-regular fa-face-smile-beam"></i>
+                                                                    {{-- <i class="fa-regular fa-face-smile-beam"></i>
+                                                                    --}}
+                                                                    <label for="survey">{{ __('Agree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="6"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-smile-beam"></i>
+                                                                    --}}
                                                                     <label for="survey">{{ __('Strongly Agree')
                                                                         }}</label>
                                                                 </div>
@@ -374,6 +394,97 @@
                                                         </div>
                                                     </div>
                                                 </fieldset>
+                                                @elseif($practice->practiceQuestions->Respondent==7 || $practice->practiceQuestions->Respondent==8)
+                                                <fieldset>
+                                                    <legend class="mb-5 pb-5 mt-5 pt-5">{{ $index++ }}.@if(app()->getLocale()=='en')
+                                                        {{$practice->practiceQuestions->Question }}
+                                                        @elseif (app()->getLocale()=='ar')
+                                                        {{$practice->practiceQuestions->QuestionAr }}
+                                                        @elseif (app()->getLocale()=='in')
+                                                        {{$practice->practiceQuestions->QuestionIn }}
+                                                        @endif
+                                                    </legend>
+                                                    <div class="container-rad mb-5 pb-5 mt-5 pt-5">
+                                                        <div class="radio-tile-group">
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="1"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-angry"></i> --}}
+                                                                    <label for="survey">{{ __('Strongly Disagree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="2"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-frown-open"></i>
+                                                                    --}}
+                                                                    <label for="survey">{{ __('Disagree') }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="3"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-meh"></i> --}}
+                                                                    <label for="survey">{{ __('Slightly Disagree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="4"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-smile"></i> --}}
+                                                                    <label for="survey">{{ __('Slightly Agree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="5"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-smile-beam"></i>
+                                                                    --}}
+                                                                    <label for="survey">{{ __('Agree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-container text-center">
+                                                                <input id="survey" type="radio"
+                                                                    name="survey-{{ $practice->practiceQuestions->id }}"
+                                                                    value="6"
+                                                                    class="{{ app()->getLocale()=='ar'?'right-input-margin':'left-input-margin' }}">
+                                                                <div class="radio-tile">
+                                                                    {{-- <i class="fa-regular fa-face-smile-beam"></i>
+                                                                    --}}
+                                                                    <label for="survey">{{ __('Strongly Agree')
+                                                                        }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                @endif
+
                                                 @endforeach
 
                                                 @if ($loop->last && count($open_end_q)==0 &&
@@ -398,6 +509,8 @@
                                                         }}</a>
                                                 </div>
                                                 @endif
+                                                @if (!$loop->first)
+
                                                 <div class="btnwxsc">
                                                     <a href="javascript:void(0)"
                                                         class="btn btn-primary {{ app()->getLocale()=='ar'? 'float-end':'float-start'}} mt-5"
@@ -405,11 +518,15 @@
                                                         __('Previous')
                                                         }}</a>
                                                 </div>
+                                                @endif
                                             </div>
                                             @endforeach
                                             {{-- priorities --}}
                                             @if ($can_ansewer_to_priorities)
                                             <div class="my-wizard-continar">
+                                                <p style="font-size: 2rem; letter-spacing: 2px" class="h2 text-info text-center">{{__('Please select two
+                                                    high priorities, and three medium priorities, and the remaining priorities are low priorities.')}}
+                                                </p>
                                                 @foreach ( $functions as $function )
 
                                                 <fieldset>
@@ -423,6 +540,7 @@
                                                         @endif
                                                     </legend>
                                                     <div class="container-rad mb-5 pb-5 mt-5 pt-5">
+
                                                         <div class="radio-tile-group">
 
                                                             <div class="input-container text-center">
@@ -882,12 +1000,12 @@
         if(e.target.matches('[data-bs-priorities]'))
         {
             //check the how many high selected
-            var high = [...form.querySelectorAll('[data-bs-priorities]:checked')].filter(input=>{return input.value=="H"});
+            var high = [...form.querySelectorAll('[data-bs-priorities]:checked')].filter(input=>{return input.value=="3"});
             if(high.length>2)
             {
                 e.target.checked=false;
-                let l1='{{ __("Did you select more than 3 high priorities?") }}';
-                let l2='{{ __("Please select only 3 high priorities") }}';
+                let l1='{{ __("Did you select more than 2 high priorities?") }}';
+                let l2='{{ __("Please select only 2 high priorities") }}';
                 Swal.fire(
                             l1,
                             l2,
@@ -896,7 +1014,7 @@
                 return;
             }
             //check the how many medium selected
-            var medium = [...form.querySelectorAll('[data-bs-priorities]:checked')].filter(input=>{return input.value=="M"});
+            var medium = [...form.querySelectorAll('[data-bs-priorities]:checked')].filter(input=>{return input.value=="2"});
             if(medium.length>3)
             {
                 e.target.checked=false;
@@ -926,9 +1044,9 @@
                 return;
             }
             //get priorities value
-            var prioritiesValue = [...priorities.map(priority=>{
+            var prioritiesValue = hasPriorities? [...priorities.map(priority=>{
                 return {functionId:priority.name.split("-")[1],priority:priority.value}
-            })]
+            })] : null;
             if(submitclicked===false)
             {
                 // ====== LOG START ======
@@ -940,11 +1058,11 @@
             //show loader
             document.getElementById('loader').classList.remove("d-none");
             //get checked radio button of agegroup
-            var agegroup = document.querySelector('input[id="agegroup"]:checked').value;
+            //var agegroup = document.querySelector('input[id="agegroup"]:checked').value;
             //add agegroupradioValue to answers array
 
             //get checked radio button of gender
-            var gender = document.querySelector('input[id="gender"]:checked').value;
+            //var gender = document.querySelector('input[id="gender"]:checked').value;
 
             var oe_qeustions_ans=null
             //get all check radion button with id survey
@@ -984,8 +1102,8 @@
                 "oe_ans":  oe_qeustions_ans,
                 "EmailId": '{{ $email_id }}',
                 "answers": answers,
-                "agegroup":agegroup,
-                "gender":gender
+                "agegroup":null,
+                "gender":null
             }];
 
 

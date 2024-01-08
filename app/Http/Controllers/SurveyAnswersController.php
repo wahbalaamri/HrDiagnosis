@@ -10,15 +10,21 @@ use App\Models\Functions;
 use App\Models\PartnerShipPlans;
 use App\Models\PracticeQuestions;
 use App\Models\PrioritiesAnswers;
+use App\Models\Sectors;
 use App\Models\SurveyAnswers;
 use App\Models\Surveys;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Stmt\Break_;
 use Termwind\Components\Dd;
 
 class SurveyAnswersController extends Controller
 {
+    private $number_response;
+    private $id;
+    private $clientID;
+    private $number_emails;
     /**
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -102,9 +108,22 @@ class SurveyAnswersController extends Controller
 
         return redirect()->route('SurveyAnswers.index');
     }
-    public function result($id)
+    public function result($id, $type, $type_id = null)
     {
-        $surveyEmails = Emails::where('SurveyId', $id)->get();
+        if ($type == "comp") {
+            $data = $this->company_results($id, $type, $type_id);
+        } elseif ($type == "sec") {
+            $data = $this->sector_results($id, $type, $type_id);
+        } else {
+            $data = $this->group_results($id, $type, $type_id);
+        }
+        return view('SurveyAnswers.result')->with($data);
+    }
+    function company_results($id, $type, $type_id = null)
+    {
+        $surveyEmails = Emails::where([['SurveyId', $id], ['comp_id', $type_id]])->get();
+        if (count($surveyEmails) <= 0)
+            return ['data_size' => 0];
         $SurveyResult = SurveyAnswers::where('SurveyId', '=', $id)->get();
         $scaleSize = 5;
         if ($SurveyResult->count() == 0 && $surveyEmails->count() == 0) {
@@ -205,6 +224,7 @@ class SurveyAnswersController extends Controller
                 }
                 $leaders_practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => round($leaders_Pract_w, 2),
                     'weightz' => round($leaders_Pract_wz, 2),
                     'function_id' => $function->id,
@@ -227,6 +247,7 @@ class SurveyAnswersController extends Controller
                 }
                 $hr_practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => $hr_practice_weight,
                     'weightz' => $hr_practice_weightz,
                     'function_id' => $function->id,
@@ -249,6 +270,7 @@ class SurveyAnswersController extends Controller
                 $emp_totalz += $emp_practice_weightz;
                 $emp_practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => $emp_practice_weight,
                     'weightz' => $emp_practice_weightz,
                     'function_id' => $function->id,
@@ -277,6 +299,7 @@ class SurveyAnswersController extends Controller
                 $practiceWeightz =  round((($OverAllAv) / $scaleSize), 2);
                 $overall_Practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => $practiceWeight,
                     'weightz' => $practiceWeightz,
                     'function_id' => $function->id,
@@ -366,7 +389,6 @@ class SurveyAnswersController extends Controller
         $count_z = 0;
         foreach ($functions as $function) {
             if ($leader_performences_[$count_z]['function_id'] == $function->id) {
-                array_push($leaders_perform_only, $leader_performences_[$count_z]['performance']);
                 array_push($leaders_perform_onlyz, $leader_performences_[$count_z]['performancez']);
             }
             if ($hr_performences_[$count_z]['function_id'] == $function->id) {
@@ -375,6 +397,7 @@ class SurveyAnswersController extends Controller
         }
         $desc_perfom = $performences_;
         $data = [
+            'data_size' => count($surveyEmails),
             'functions' => $functions,
             'priorities' => $priorities,
             'overallResult' => $overallResult,
@@ -389,8 +412,8 @@ class SurveyAnswersController extends Controller
             'sorted_hr_performences' => $sorted_hr_performences,
             'sorted_emp_performences' => $sorted_emp_performences,
             'function_Lables' => $function_Lables,
-            'leaders_perform_only' => $leaders_perform_only,
-            'hr_perform_only' => $hr_perform_only,
+            // 'leaders_perform_only' => $leaders_perform_only,
+            // 'hr_perform_only' => $hr_perform_only,
             'leaders_perform_onlyz' => $leaders_perform_onlyz,
             'hr_perform_onlyz' => $hr_perform_onlyz,
             "id" => $id,
@@ -402,8 +425,71 @@ class SurveyAnswersController extends Controller
             'leaders_res' => $Answers_by_leaders,
             'hr_res' => $Answers_by_hr,
             'emp_res' => $Answers_by_emp,
+            'leader_performences'=>$leader_performences_,
+            'hr_performences'=>$hr_performences_,
         ];
-        return view('SurveyAnswers.result')->with($data);
+        return $data;
+    }
+    function sector_results($id, $type, $type_id = null)
+    {
+        $sector = Sectors::find($type_id);
+        $sector_data = [];
+        foreach ($sector->companies as $company) {
+            $comp_d = $this->company_results($id, 'comp', $company->id);
+            if ($comp_d['data_size'] > 0)
+                array_push($sector_data, $comp_d);
+        }
+        $overallResultz=0;
+        $overallResult=0;
+        $priorities_data=[];
+        $asc_perform_data=[];
+        $desc_perfom_data=[];
+        $overall_Practices_data=[];
+        $overAllpractice_data=[];
+        $unsorted_performences_data=[];
+        $sorted_leader_performences_data=[];
+        $sorted_hr_performences_data=[];
+        $sorted_emp_performences_data=[];
+        $leader_performences_data=[];
+        $hr_performences_data=[];
+        $Resp_overAll_res=0;
+        $overAll_res=0;
+        $prop_leadersResp=0;
+        $prop_hrResp=0;
+        $prop_empResp=0;
+        $leaders_res=0;
+        $hr_res=0;
+        $emp_res=0;
+        foreach ($sector_data  as $comp_data) {
+
+            $overallResultz += $comp_data['overallResultz'];
+            $overallResult += $comp_data['overallResult'];
+            $priorities_data = array_merge($priorities_data, $comp_data['priorities']);
+            $asc_perform_data = array_merge($asc_perform_data, $comp_data['asc_perform']);
+            $desc_perfom_data = array_merge($desc_perfom_data, $comp_data['desc_perfom']);
+            $overall_Practices_data = array_merge($overall_Practices_data, $comp_data['overall_Practices']);
+            $overAllpractice_data = array_merge($overAllpractice_data, $comp_data['overAllpractice']);
+            $unsorted_performences_data = array_merge($unsorted_performences_data, $comp_data['unsorted_performences']);
+            $sorted_leader_performences_data = array_merge($sorted_leader_performences_data, $comp_data['sorted_leader_performences']);
+            $sorted_hr_performences_data = array_merge($sorted_hr_performences_data, $comp_data['sorted_hr_performences']);
+            $sorted_emp_performences_data = array_merge($sorted_emp_performences_data, $comp_data['sorted_emp_performences']);
+            $leader_performences_data = array_merge($leader_performences_data, $comp_data['leader_performences']);
+            $hr_performences_data = array_merge($hr_performences_data, $comp_data['hr_performences']);
+            $Resp_overAll_res += $comp_data['Resp_overAll_res'];
+            $overAll_res += $comp_data['overAll_res'];
+            $prop_leadersResp += $comp_data['prop_leadersResp'];
+            $prop_hrResp += $comp_data['prop_hrResp'];
+            $prop_empResp += $comp_data['prop_empResp'];
+            $leaders_res += $comp_data['leaders_res'];
+            $hr_res += $comp_data['hr_res'];
+            $emp_res += $comp_data['emp_res'];
+        }
+        Log::info(count($sector_data));
+        Log::info(collect($priorities_data));
+        $overallResultz = $overallResultz / count($sector_data);
+        $overallResult = $overallResult / count($sector_data);
+        $data = [];
+        return $sector_data[0];
     }
     public function ShowFreeResult($id)
     {
@@ -437,6 +523,7 @@ class SurveyAnswersController extends Controller
 
                 $overall_Practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => $practiceWeight,
                     'function_id' => $function->id,
                 ];
@@ -446,6 +533,7 @@ class SurveyAnswersController extends Controller
                 $hr_total += $hr_practice_weight;
                 $hr_practice = [
                     'name' => $practiceName,
+                    'id'=>$functionPractice->id,
                     'weight' => $hr_practice_weight,
                     'function_id' => $function->id,
                 ];
@@ -494,5 +582,282 @@ class SurveyAnswersController extends Controller
             }
         }
         return [$leaders_email, $hr_teames_email, $employees_email];
+    }
+    function statistics($id, $clientID)
+    {
+        //get all emails where survey id =$id
+        $number_all_respondent = 0;
+        $minutes = 5;
+        $this->id = $id;
+        $this->clientID = $clientID;
+        $number_all_respondent =  Emails::where('SurveyId', $id)->count();
+        // Log::info($number_all_respondent);
+        // $number_all_respondent = 5551;
+        $number_all_respondent_answers = Cache::remember('number_all_respondent_answers', $minutes, function () use ($id) {
+            return SurveyAnswers::where('SurveyId', $id)->distinct('AnsweredBy')->count();
+        });
+        //get all sectors where client id =clientID
+        $sectors = Cache::remember('sectors', $minutes, function () use ($clientID) {
+            return Sectors::where('client_id', $clientID)->get();
+        });
+        //pluck sector IDs to an array
+        $sectors_ids = $sectors->pluck('id')->all();
+        //get all companies for each sector
+        $companies_list = collect([]);
+        //get all departments
+        $dep_list = collect([]);
+        foreach ($sectors as $sector) {
+            $companies = $sector->companies;
+            //push companies to  companies_list object
+            $companies_list = $companies_list->merge($companies);
+            foreach ($companies as $company) {
+                $dep_list = $dep_list->merge($company->departments);
+            }
+        }
+        //pluck companies IDs to an array
+        $companies_ids = $companies_list->pluck('id')->all();
+        //pluck departments IDs to an array
+        $dep_ids = $dep_list->pluck('id')->all();
+
+        //get all emails where survey id =$id and foreach sectors
+        $sector_emails = [];
+
+        $companies_emails = [];
+        $sectors_details = [];
+        $companies_details = [];
+        //sector-wise statistics
+        foreach ($sectors as $sector) {
+            $sector_emails = [];
+            $number_of_emails = 0;
+            switch ($sector->sector_name_en) {
+                case 'THE ZUBAIR CORPORATION':
+                    $number_of_emails = 84;
+                    break;
+                case 'Zubair Investments':
+                    $number_of_emails = 125;
+                    break;
+                case 'Digitizationan & Information Technology':
+                    $number_of_emails = 93;
+                    break;
+                case 'Education':
+                    $number_of_emails = 377;
+                    break;
+                case 'Energy & Natural Resources':
+                    $number_of_emails = 220;
+                    break;
+                case 'Fast Moving Consumer Good':
+                    $number_of_emails = 2451;
+                    break;
+                case 'Industrial & Chemical':
+                    $number_of_emails = 574;
+                    break;
+                case 'Mobility & Equipment':
+                    $number_of_emails = 686;
+                    break;
+                case 'Real Estate':
+                    $number_of_emails = 80;
+                    break;
+                case 'Smart Electrification & Automation':
+                    $number_of_emails = 867;
+                    break;
+                case 'Other':
+                    $number_of_emails = 21;
+                    break;
+                default:
+                    $number_of_emails = 1;
+                    break;
+            }
+            $Sector_emails_count = Emails::where([['SurveyId', $id], ['sector_id', $sector->id]])->count();
+            $this->number_emails += $Sector_emails_count;
+            foreach (Emails::where([['SurveyId', $id], ['sector_id', $sector->id]])->get() as $em) {
+                array_push($sector_emails, $em->id);
+            }
+            $Sector_emails_count > 0 ?
+                $this->number_response = SurveyAnswers::where('SurveyId', $id)->whereIn('AnsweredBy', $sector_emails)->distinct('AnsweredBy')->count('AnsweredBy') : 0;
+            // chunck survey answers to get count
+
+            $sector_details = [
+                'sector_name' => App()->getLocale() == 'en' ? $sector->sector_name_en : $sector->sector_name_ar,
+                'sector_id' => $sector->id,
+                'sector_emails' => $Sector_emails_count,
+                'sector_answers' => $this->number_response,
+            ];
+            array_push($sectors_details, $sector_details);
+            foreach ($sector->companies as $company) {
+                //pluck of id
+                $number_of_emails_comp = 0;
+                // Log::info("Survey: " . $id);
+                // Log::info("Sector: " . $sector->id);
+                // Log::info("Company: " . $company->id);
+
+                $emails_comp = Emails::where([['SurveyId', $id], ['sector_id', $sector->id], ['comp_id', $company->id]])->pluck('id')->all();
+                $this->number_response = SurveyAnswers::where('SurveyId', $id)->whereIn('AnsweredBy', $emails_comp)->distinct('AnsweredBy')->count('AnsweredBy');
+                if (count($emails_comp) > 0) {
+                    Log::info("I am inside");
+                    switch ($company->company_name_en) {
+                        case 'The Zubair Corporation':
+                            $number_of_emails_comp = 76;
+                            break;
+                        case 'BAZF':
+                            $number_of_emails_comp = 34;
+                            break;
+                        case 'JO':
+                            $number_of_emails_comp = 15;
+                            break;
+                        case 'PC-Imaging':
+                            $number_of_emails_comp = 9;
+                            break;
+                        case 'PHOTOCENTRE':
+                            $number_of_emails_comp = 12;
+                            break;
+                        case 'SPARK':
+                            $number_of_emails_comp = 11;
+                            break;
+                        case 'OMAN COMPUTER SERVICES LLC':
+                            $number_of_emails_comp = 93;
+                            break;
+                        case 'Azzan Bin Qais International School':
+                            $number_of_emails_comp = 130;
+                            break;
+                        case 'As Seeb International School':
+                            $number_of_emails_comp = 124;
+                            break;
+                        case 'Sohar International School':
+                            $number_of_emails_comp = 116;
+                            break;
+                        case 'ARA PETROLEUM OMAN B44 LIMITED':
+                            $number_of_emails_comp = 63;
+                            break;
+                        case 'ARA Petroleum E&P LLC':
+                            $number_of_emails_comp = 154;
+                            break;
+                        case 'AL MUZN':
+                            $number_of_emails_comp = 59;
+                            break;
+                        case 'OLC':
+                            $number_of_emails_comp = 51;
+                            break;
+                        case 'OWC':
+                            $number_of_emails_comp = 1076;
+                            break;
+                        case 'Mobility & Equipment':
+                            $number_of_emails_comp = 686;
+                            break;
+                        case 'Romana Water':
+                            $number_of_emails_comp = 716;
+                            break;
+                        case 'Al Arabiya Mineral Water and Packaging Factory':
+                            $number_of_emails_comp = 549;
+                            break;
+                        case 'ELCO':
+                            $number_of_emails_comp = 289;
+                            break;
+                        case 'Jaidah Energy LLC':
+                            $number_of_emails_comp = 84;
+                            break;
+                        case 'Oman Oil Industry Supplies & Services Company LLC':
+                            $number_of_emails_comp = 148;
+                            break;
+                        case 'Solentis':
+                            $number_of_emails_comp = 25;
+                            break;
+                        case 'GAC':
+                            $number_of_emails_comp = 475;
+                            break;
+                        case 'IHE':
+                            $number_of_emails_comp = 139;
+                            break;
+                        case 'SRT':
+                            $number_of_emails_comp = 33;
+                            break;
+                        case 'ZAG':
+                            $number_of_emails_comp = 44;
+                            break;
+                        case 'Barr Al Jissah':
+                            $number_of_emails_comp = 21;
+                            break;
+                        case 'HEMZ UAE':
+                            $number_of_emails_comp = 5;
+                            break;
+                        case 'INMA PROPERTY DEVELOPMENT LLC':
+                            $number_of_emails_comp = 47;
+                            break;
+                        case 'ZUBAIR ELECTRIC':
+                            $number_of_emails_comp = 53;
+                            break;
+                        case 'Federal Transformers & Switchgears LLC':
+                            $number_of_emails_comp = 67;
+                            break;
+                        case 'Business International Group LLC':
+                            $number_of_emails_comp = 86;
+                            break;
+                        case 'AL ZUBAIR GENERAL TRADING LLC':
+                            $number_of_emails_comp = 134;
+                            break;
+                        case 'ZAKHER ELECTRIC WARE EST':
+                            $number_of_emails_comp = 16;
+                            break;
+                        case 'AL ZUBAIR ELECTRICAL APPLIANCES':
+                            $number_of_emails_comp = 12;
+                            break;
+                        case 'SPECTRA INTERNATIONAL':
+                            $number_of_emails_comp = 42;
+                            break;
+                        case 'ZEEMAN SERVICES & SOLUTIONS WLL':
+                            $number_of_emails_comp = 14;
+                            break;
+                        case '4000-Federal Transformers Company LLC':
+                            $number_of_emails_comp = 388;
+                            break;
+                        case 'Zakher Education Development Company':
+                            $number_of_emails_comp = 7;
+                            break;
+                        case 'WILMAR INTERNATIONAL LLC':
+                            $number_of_emails_comp = 4;
+                            break;
+                        case 'AL ZUBAIR TRADING ESTABLISHMENT':
+                            $number_of_emails_comp = 6;
+                            break;
+                        case 'ARA Petroleum LLC':
+                            $number_of_emails_comp = 3;
+                            break;
+                        case '4010-Federal Power Transformers LLC':
+                            $number_of_emails_comp = 83;
+                            break;
+                        default:
+                            $number_of_emails_comp = count($emails_comp);;
+                            break;
+                    }
+                    $company_details = [
+                        'company_name' => App()->getLocale() == 'en' ? $company->company_name_en : $company->company_name_ar,
+                        'company_id' => $company->id,
+                        //get all emails with comp_id = $company->id
+                        'company_emails' => count($emails_comp),
+                        'company_answers' => $this->number_response,
+                        //sector name
+                        'sector_name' => App()->getLocale() == 'en' ? $company->sectors->sector_name_en : $company->sectors->sector_name_ar,
+                        //response rate
+                        'response_rate' => round(($this->number_response / count($emails_comp)), 2) * 100,
+
+                    ];
+                    array_push($companies_details, $company_details);
+                } else {
+                    // Log::info("I am not inside");
+                }
+            }
+        }
+        //company-wise statistics
+
+        $data = [
+            'number_all_respondent' => $number_all_respondent,
+            'number_all_respondent_answers' => $number_all_respondent_answers,
+            'sectors' => $sectors->count(),
+            'companies' => count($companies_list),
+            'departments' => count($dep_list),
+            'id' => $id,
+            'sectors_details' => $sectors_details,
+            'company_details' => $companies_details,
+        ];
+        return view('SurveyAnswers.statistics')->with($data);
     }
 }

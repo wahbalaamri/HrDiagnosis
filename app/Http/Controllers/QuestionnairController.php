@@ -106,9 +106,9 @@ class QuestionnairController extends Controller
                     $Priority_answer = new PrioritiesAnswers();
                     $Priority_answer->SurveyId = $SurveyId;
                     $Priority_answer->AnsweredBy = $EmailId;
-                    $Priority_answer->QuestionId = $value['function'];
+                    $Priority_answer->QuestionId = $value['functionId'];
                     $Priority_answer->AnswerValue = $value['priority'];
-                    Log::info($Priority_answer);
+                    // Log::info($Priority_answer);
                     $Priority_answer->save();
                 }
             }

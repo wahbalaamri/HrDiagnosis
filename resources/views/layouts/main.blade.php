@@ -200,10 +200,19 @@
                                 <li><a href="/">{{ __('Home') }}</a></li>
                                 @if (Auth()->check())
 
-                                @if (Auth()->user()->user_type == 'admin' ||Auth()->user()->user_type == 'superadmin')
-                                <li><a href="{{ route('partner-ship-plans.index') }}">{{ __('Control Panel') }}</a>
+                                @role('admin')
+                                <li><a href="{{ route('partner-ship-plans.index') }}" class="menu-li-iteam"
+                                        {{-- style="margin-right:1rem !important" --}}>{{ __('Control Panel') }}</a>
                                 </li>
-                                @endif
+                                @endrole
+                                @role('statisticsViewer')
+                                <li><a href="{{ route('survey.statistics',[9,3]) }}" class="menu-li-iteam"
+                                        {{-- style="margin-right:1rem !important" --}}>{{ __('Statistics') }}</a>
+                                </li>
+                                {{-- <li><a href="{{ route('Client.AddEmail',[12,20]) }}" class="menu-li-iteam"
+                                        >{{ __('Add New Email') }}</a>
+                                </li> --}}
+                                @endrole
                                 @endif
                                 {{-- <li><a href="/TrainingHome#learnOnline">تعلم</a> </li>
                                 <li><a href="/#consultHR">استشر</a> </li> --}}

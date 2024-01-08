@@ -169,10 +169,9 @@ class EmailsController extends Controller
 
             // Excel::toArray([],$filePath);
             $array = array();
-            $tss = Excel::toArray($array, $request->file('EmailFile'));
-            Log::alert($tss[0]);
+            // $tss = Excel::toArray($array, $request->file('EmailFile'));
             $emails = Excel::toArray([], $request->file('EmailFile'));
-            Log::alert($request->AddedBy);
+            // Log::alert($request->AddedBy);
             foreach ($emails[0] as $key => $value) {
 
                 if (str_contains($value[0], '@')) {
@@ -200,33 +199,45 @@ class EmailsController extends Controller
 
             // Excel::toArray([],$filePath);
             $array = array();
-            $tss = Excel::toArray($array, $request->file('EmailFile'));
+            // $tss = Excel::toArray($array, $request->file('EmailFile'));
             $emails = Excel::toArray([], $request->file('EmailFile'));
             foreach ($emails[0] as $key => $value) {
                 //ignor table head title
                 $usr_email = null;
+                $emp_type = 0;
                 if ($key > 0) {
 
-                    if (str_contains($value[2], '@')) {
-                        $usr_email = $value[2];
+                    if (str_contains($value[3], '@')) {
+                        $usr_email = $value[3];
                     }
-                    Log::info("Sector: " . $value[0]);
-                    Log::info("company: " . $value[1]);
+
+                    //lower case str_contains($value[5], 'employee') employee type 3
+                    if (str_contains(strtolower($value[5]), 'employee')) {
+                        $emp_type = 3;
+                    }
+                    //lower case str_contains($value[5], 'hr') employee type 2
+                    elseif (str_contains(strtolower($value[5]), 'hr')) {
+                        $emp_type = 2;
+                    } else {
+                        $emp_type = 1;
+                    }
+                    // Log::info("Sector: " . $value[0]);
+                    // Log::info("company: " . $value[1]);
                     $company_id = null;
                     $sector_ = null;
-                    $old_email = Emails::where([['Email', $usr_email], ['Mobile', $value[3]], ['ClientId', $request->get('ClientIdU')], ['SurveyId', $request->get('SurveyIdU')]])->first();
+                    $old_email = Emails::where([['Email', $usr_email], ['Mobile', $value[4]], ['ClientId', $request->get('ClientIdU')], ['SurveyId', $request->get('SurveyIdU')]])->first();
                     $sector_ = Sectors::where([['sector_name_en', 'LIKE', '%' . $value[0] . '%'], ['client_id', $request->get('ClientIdU')]])->first();
-                    $company_id = $sector_ !=null ? Companies::where('sector_id', $sector_->id)->where('company_name_en', 'LIKE', "%" . $value[1] . "%")->first()->id : null;
+                    $company_id = $sector_ != null ? Companies::where('sector_id', $sector_->id)->where('company_name_en', 'LIKE', "%" . $value[1] . "%")->first()->id : null;
                     if ($sector_ != null && $company_id != null) {
                         if ($usr_email != null && $old_email != null) {
                             $old_email->ClientId = $request->get('ClientIdU');
                             $old_email->SurveyId = $request->get('SurveyIdU');
                             $old_email->Email = $usr_email;
-                            $old_email->Mobile = $value[3];
+                            $old_email->Mobile = $value[4];
                             $old_email->sector_id = $sector_->id;
                             $old_email->comp_id = $company_id;
                             $old_email->dep_id = 0;
-                            $old_email->EmployeeType = 0;
+                            $old_email->EmployeeType = $emp_type;
                             $old_email->save();
                         } else {
 
@@ -234,11 +245,11 @@ class EmailsController extends Controller
                             $email->ClientId = $request->get('ClientIdU');
                             $email->SurveyId = $request->get('SurveyIdU');
                             $email->Email = $usr_email;
-                            $email->Mobile = $value[3];
+                            $email->Mobile = $value[4];
                             $email->sector_id = $sector_->id;
                             $email->comp_id = $company_id;
                             $email->dep_id = 0;
-                            $email->EmployeeType = 0;
+                            $email->EmployeeType = $emp_type;
                             $email->AddedBy = Auth()->user()->id;
                             $email->save();
                         }
@@ -356,15 +367,31 @@ class EmailsController extends Controller
     public function sendTheSurvey(Request $request)
     {
         // Log::alert($request->reminder);
-        if ($request->reminder == 2) {
-            $emails = Emails::where('id', $request->respondentID)->get();
-        } elseif ($request->reminder == 0)
-            $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id], ['comp_id', $request->CompanyId]])->whereNotNull('Email')->get();
-        else {
-            $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id], ['comp_id', $request->CompanyId]])->whereNotNull('Email')
-                ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
-                ->get();
-            // Log::info($emails);
+        $emails =[];
+        if ($request->SectorId != null || $request->SectorId != '') {
+            if ($request->reminder == 2) {
+                $emails = Emails::where('id', $request->respondentID)->get();
+            } elseif ($request->reminder == 0)
+                $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id], ['comp_id', $request->CompanyId]])->whereNotNull('Email')->get();
+            else {
+                $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id], ['comp_id', $request->CompanyId]])->whereNotNull('Email')
+                    ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
+                    ->get();
+                // Log::info($emails);
+            }
+        }
+        else
+        {
+            if ($request->reminder == 2) {
+                $emails = Emails::where('id', $request->respondentID)->get();
+            } elseif ($request->reminder == 0)
+                $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id]])->whereNotNull('Email')->get();
+            else {
+                $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id]])->whereNotNull('Email')
+                    ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
+                    ->get();
+                // Log::info($emails);
+            }
         }
         // Log::alert($emails);
         // foreach ($emails as $key => $value) {
@@ -459,8 +486,8 @@ class EmailsController extends Controller
         ];
         return view('Emails.create')->with($data);
     }
-    // function ExportEmails($client_id, $survey_id)
-    // {
-    //     return Excel::download(new RespondentsExport($client_id, $survey_id), 'Respondents.xlsx');
-    // }
+    function ExportEmails($client_id, $survey_id)
+    {
+        return Excel::download(new RespondentsExport($client_id, $survey_id), 'Respondents.xlsx');
+    }
 }

@@ -8,7 +8,9 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Exports\\ExportTemplates' => $baseDir . '/app/Exports/ExportTemplates.php',
     'App\\Exports\\PrioritiesAnswersExport' => $baseDir . '/app/Exports/PrioritiesAnswersExport.php',
+    'App\\Exports\\RespondentsExport' => $baseDir . '/app/Exports/RespondentsExport.php',
     'App\\Exports\\SurveyAnswersExport' => $baseDir . '/app/Exports/SurveyAnswersExport.php',
     'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
