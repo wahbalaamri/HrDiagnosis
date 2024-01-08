@@ -683,7 +683,7 @@
                 @if($perfomr['performancez']<=50) {{ __('Critical to improve') }} @elseif($perfomr['performancez']>80)
                     No
                     {{ __('Improvement Needed') }}
-                    @else {{ __('Need to improve') }}
+                    @else {{ __('Need to improve') }}{{ $perfomr['performancez'] }}
                     @endif
             </div>
             @endforeach
