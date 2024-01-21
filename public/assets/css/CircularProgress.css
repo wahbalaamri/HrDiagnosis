@@ -12,17 +12,25 @@
 
 .function-lable {
     border-right: 1px solid #a6a8aa;
-    padding-right: 3px;
-    background-color: #fff;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    /* background-color: #fff; */
+    padding-top: 0.9rem;
+    padding-bottom: 2px;
+    /* left: 9% !important; */
+    position: relative !important;
 }
 
 .function-progress {
     padding-left: 3px;
-    background-color: #fff;
+    /* background-color: #fff; */
     padding-top: 10px;
     padding-bottom: 10px;
+    /* left: 6% !important; */
+    position: relative !important;
+}
+
+.row-function {
+    background-color: #fcf3e1;
+    border-radius: 9px
 }
 
 .circle-wrap {
@@ -248,7 +256,11 @@
 .mask .fill-47,
 .mask .fill-48,
 .mask .fill-49,
-.mask .fill-50,
+.mask .fill-50 {
+    clip: rect(0px, 85px, 180px, 0px);
+    background-color: #dc3545;
+}
+
 .mask .fill-51,
 .mask .fill-52,
 .mask .fill-53,
@@ -258,11 +270,7 @@
 .mask .fill-57,
 .mask .fill-58,
 .mask .fill-59,
-.mask .fill-60 {
-    clip: rect(0px, 85px, 180px, 0px);
-    background-color: #dc3545;
-}
-
+.mask .fill-60,
 .mask .fill-61,
 .mask .fill-62,
 .mask .fill-63,
@@ -281,12 +289,12 @@
 .mask .fill-76,
 .mask .fill-77,
 .mask .fill-78,
-.mask .fill-79,
-.mask .fill-80 {
+.mask .fill-79 {
     clip: rect(0px, 85px, 180px, 0px);
     background-color: #ffc107;
 }
 
+.mask .fill-80,
 .mask .fill-81,
 .mask .fill-82,
 .mask .fill-83,

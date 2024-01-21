@@ -117,8 +117,8 @@ Route::put('surveys/updateOEQ/{id}/{survey}', [SurveysController::class, 'Update
 Route::post('surveys/newOEQ/{survey}', [SurveysController::class, 'SaveOpenEndedQ'])->name('surveys.SaveOpenEndedQ')->middleware(['auth', 'role:admin']);
 Route::get('surveys/EditOEQ/{id}/{survey}', [SurveysController::class, 'EditOpenEndedQ'])->name('surveys.EditOpenEndedQ')->middleware(['auth', 'role:admin']);
 Route::get('surveys/addNewOEQ/{id}', [SurveysController::class, 'addOpenEndedQ'])->name('surveys.addOpenEndedQ')->middleware(['auth', 'role:admin']);
-Route::get('surveys/DownloadPriorities/{id}', [SurveysController::class, 'DownloadPriorities'])->name('surveys.DownloadPriorities')->middleware(['auth', 'role:admin']);
-Route::get('surveys/DownloadSurvey/{id}', [SurveysController::class, 'DownloadSurvey'])->name('surveys.DownloadSurvey')->middleware(['auth', 'role:admin']);
+Route::get('surveys/DownloadPriorities/{id}/{type}/{type_id?}', [SurveysController::class, 'DownloadPriorities'])->name('surveys.DownloadPriorities')->middleware(['auth', 'role:admin']);
+Route::get('surveys/DownloadSurvey/{id}/{type}/{type_id?}', [SurveysController::class, 'DownloadSurvey'])->name('surveys.DownloadSurvey')->middleware(['auth', 'role:admin']);
 Route::get('surveys/CreateNewSurvey/{id}', [SurveysController::class, 'CreateNewSurvey'])->name('surveys.CreateNewSurvey')->middleware(['auth', 'role:admin']);
 Route::get('surveys/getOEQ/{id}', [SurveysController::class, 'getOEQ'])->name('surveys.getOEQ')->middleware(['auth', 'role:admin']);
 Route::post('surveys/ChangeCheck', [SurveysController::class, 'ChangeCheck'])->name('surveys.ChangeCheck')->middleware(['auth', 'role:admin']);
@@ -127,7 +127,7 @@ Route::resource('surveys', SurveysController::class)->middleware(['auth', 'role:
 Route::get('survey-answers/freeSurveyResult/{id}', [SurveyAnswersController::class, 'ShowFreeResult'])->name('survey-answers.freeSurveyResult');
 Route::resource('survey-answers', SurveyAnswersController::class)->middleware(['auth', 'role:admin']);
 Route::get('/survey-answers/result/{id}/{type}/{type_id?}', [SurveyAnswersController::class, 'result'])->name('survey-answers.result')->middleware(['auth', 'role:admin']);
-Route::get('/survey-answers/alzubair_result/{id}', [SurveyAnswersController::class, 'alzubair_result'])->name('survey-answers.alzubair_result')->middleware(['auth', 'role:admin']);
+Route::get('/survey-answers/alzubair_result/{id}/{type}/{type_id?}', [SurveyAnswersController::class, 'alzubair_result'])->name('survey-answers.alzubair_result')->middleware(['auth', 'role:admin']);
 Route::get('/survey-answers/statistics/{id}/{Clientid}', [SurveyAnswersController::class, 'statistics'])->name('survey-answers.statistics')->middleware(['auth', 'role:admin']);
 Route::get('/statistics/{id}/{Clientid}', [StatisticsController::class, 'index'])->name('survey.statistics')->middleware(['auth', 'role:statisticsViewer']);
 // Route::get('/Client/AddEmail/{Clientid}/{Surveyid}', [StatisticsController::class, 'AddNewEmails'])->name('Client.AddEmail')->middleware(['auth', 'role:statisticsViewer']);

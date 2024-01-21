@@ -6,8 +6,10 @@ use App\Exports\PrioritiesAnswersExport;
 use App\Exports\SurveyAnswersExport;
 use App\Http\Requests\SurveyStoreRequest;
 use App\Http\Requests\SurveyUpdateRequest;
+use App\Models\Companies;
 use App\Models\EmailContent;
 use App\Models\PrioritiesAnswers;
+use App\Models\Sectors;
 use App\Models\SurveyAnswers;
 use App\Models\Surveys;
 use Illuminate\Http\Request;
@@ -115,14 +117,35 @@ class SurveysController extends Controller
         $survey->save();
         return response()->json(['message' => 'Status change successfully.']);
     }
-    public function DownloadSurvey($id)
+    public function DownloadSurvey($id, $type, $type_id=null)
     {
+        $fileName = '';
+        if ($type == 'sec') {
+            $sector = Sectors::find($type_id)->sector_name_en;
+            $fileName = $sector . ' - Sector - SurveyAnswers';
+        } else if ($type == 'comp') {
+            $company = Companies::find($type_id)->company_name_en;
+            $fileName = $company . ' - Company - SurveyAnswers';
+        } else if ($type == 'all') {
+            $fileName = 'All - SurveyAnswers';
+        }
+        // create .xlsx file in public folder
 
-        return Excel::download(new SurveyAnswersExport($id), 'SurveyAnswersExport.xlsx');
+        return Excel::download(new SurveyAnswersExport($id, $type, $type_id), $fileName.'.xlsx');
     }
-    public function DownloadPriorities($id)
+    public function DownloadPriorities($id, $type, $type_id=null)
     {
-        return Excel::download(new PrioritiesAnswersExport($id), 'PrioritiesAnswersExport.xlsx');
+        $fileName = '';
+        if ($type == 'sec') {
+            $sector = Sectors::find($type_id)->sector_name_en;
+            $fileName = $sector . ' - Sector - SurveyAnswers';
+        } else if ($type == 'comp') {
+            $company = Companies::find($type_id)->company_name_en;
+            $fileName = $company . ' - Company - SurveyAnswers';
+        } else if ($type == 'all') {
+            $fileName = 'All - SurveyAnswers';
+        }
+        return Excel::download(new PrioritiesAnswersExport($id, $type, $type_id), $fileName.'.xlsx');
         # code...
     }
     public function addOpenEndedQ($id)
