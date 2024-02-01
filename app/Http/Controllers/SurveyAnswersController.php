@@ -297,17 +297,26 @@ class SurveyAnswersController extends Controller
                 if ($leaders_had_answers) {
                     $the_three_avg += $leaders_ans_avg;
                     $avg_factor++;
-                    if (!$Leader_function_flag) $Leader_function_flag = true;
+                    if (!$Leader_function_flag) {
+                        $p_count_++;
+                        $Leader_function_flag = true;
+                    }
                 }
                 if ($hr_had_answers) {
                     $the_three_avg += $hr_ans_avg;
                     $avg_factor++;
-                    if (!$hr_function_flag) $hr_function_flag = true;
+                    if (!$hr_function_flag) {
+                        $p_count_++;
+                        $hr_function_flag = true;
+                    }
                 }
                 if ($emp_had_answers) {
                     $the_three_avg += $emp_ans_avg;
                     $avg_factor++;
-                    if (!$emp_function_flag) $emp_function_flag = true;
+                    if (!$emp_function_flag) {
+                        $p_count_++;
+                        $emp_function_flag = true;
+                    }
                 }
 
                 Log::info($practiceName . ' = ' . $the_three_avg);
@@ -318,8 +327,8 @@ class SurveyAnswersController extends Controller
                     return ['data_size' => 0];
                 $OverAllAv = ($the_three_avg) / $avg_factor;
                 $practiceWeight =  round((($OverAllAv) / $scaleSize), 2);
-                $function_w += $practiceWeight;
-                $p_count_++;
+                // $function_w += $practiceWeight;
+                // $p_count_++;
                 // $practiceWeightz =  round((($OverAllAv) / $scaleSize), 2);
                 $overall_Practice = [
                     'name' => $practiceName,
@@ -332,7 +341,6 @@ class SurveyAnswersController extends Controller
                 $total += $leaders_Pract_w + $hr_practice_weight + $emp_practice_weight;
                 // $totalz += $leaders_Pract_wz + $hr_practice_weightz + $emp_practice_weightz;
             }
-            Log::info('=============================================');
             //get bluck of question id through function
             $practicesIDs = $function->functionPractices->pluck('id')->toArray();
             $questionsIDs = PracticeQuestions::whereIn('PracticeId', $practicesIDs)->pluck('id')->toArray();
@@ -386,12 +394,12 @@ class SurveyAnswersController extends Controller
             $total_answers = $prioritiesRes->where('QuestionId', $function->id)->whereIn('AnsweredBy', $leaders_email)->sum('AnswerValue');
             $count_answers = $prioritiesRes->where('QuestionId', $function->id)->whereIn('AnsweredBy', $leaders_email)->count();
             $priorityVal = $count_answers > 0 ? round((($total_answers / $count_answers) / 3), 2) : 0;
-            $priority = ["priority" => $priorityVal, "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle, "function_id" => $function->id, "performance" => $avgl, "performance" => $avgl];
+            $priority = ["priority" => number_format($priorityVal*100), "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle, "function_id" => $function->id, "performance" => number_format($avgl * 100), "performancez" => number_format($avgl * 100)];
             array_push($priorities, $priority);
             $performence_ = [
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format(($function_w / $p_count_) * 100),
+                "performance" => number_format((($avge + $avgh + $avgl) / $p_count_) * 100),
                 // "performance" => ($avg * 100),
                 // 'overall_Practices' => $overall_Practices,
                 // 'leaders_practices' => $leaders_practices,
@@ -559,7 +567,7 @@ class SurveyAnswersController extends Controller
                 "priority" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('priority')) / count($sector_data), 2),
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
             ];
             array_push($priorities, $priority);
             $overall_Practices_data = collect($overall_Practices_data);
@@ -571,8 +579,8 @@ class SurveyAnswersController extends Controller
                 $overall_Practice = [
                     'name' => $practiceName,
                     'id' => $practice->id,
-                    'weight' => number_format((collect($overall_Practices_data)->where('id', $practice->id)->where('function_id', $function->id)->sum('weight')) / count($sector_data), 2),
-                    'weightz' => number_format((collect($overall_Practices_data)->where('id', $practice->id)->where('function_id', $function->id)->sum('weightz')) / count($sector_data), 2),
+                    'weight' => number_format((collect($overall_Practices_data)->where('id', $practice->id)->where('function_id', $function->id)->sum('weight')) / count($sector_data),2),
+                    'weightz' => number_format((collect($overall_Practices_data)->where('id', $practice->id)->where('function_id', $function->id)->sum('weightz')) / count($sector_data),2),
                     'function_id' => $function->id,
                 ];
                 array_push($overall_Practices, $overall_Practice);
@@ -604,7 +612,7 @@ class SurveyAnswersController extends Controller
             $performence_ = [
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($asc_perform_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($asc_perform_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
                 // "performance" => number_format((collect($asc_perform_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
                 // 'overall_Practices' => $overall_Practices,
                 // 'leaders_practices' => $leaders_practices,
@@ -615,26 +623,26 @@ class SurveyAnswersController extends Controller
             $emp_performence_ = [
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($sorted_emp_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($sorted_emp_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
                 "applicable" => collect($sorted_emp_performences_data)->where('function_id', $function->id)->first()['applicable'] == 1 ? true : false
-                // "performance" => number_format((collect($sorted_emp_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2)
+                // "performance" => number_format((collect($sorted_emp_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data))
             ];
             array_push($sorted_emp_performences, $emp_performence_);
-            $hr_performance = number_format((collect($sorted_hr_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2);
+            $hr_performance = number_format((collect($sorted_hr_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data));
             $hr_performence_ = [
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($sorted_hr_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($sorted_hr_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
                 "applicable" => collect($sorted_hr_performences_data)->where('function_id', $function->id)->first()['applicable'] == 1 ? true : false
                 // "performance" => $hr_performance
             ];
             array_push($sorted_hr_performences, $hr_performence_);
             array_push($hr_perform_onlyz, $hr_performance);
-            $L_performance = number_format((collect($sorted_leader_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2);
+            $L_performance = number_format((collect($sorted_leader_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data));
             $leader_performence_ = [
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($sorted_leader_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($sorted_leader_performences_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
                 "applicable" => collect($sorted_leader_performences_data)->where('function_id', $function->id)->first()['applicable'] == 1 ? true : false
                 // "performance" => $L_performance
             ];
@@ -766,7 +774,7 @@ class SurveyAnswersController extends Controller
                 "priority" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('priority')) / count($sector_data), 2),
                 "function" => App()->getLocale() == 'ar' ? $function->FunctionTitleAr : $function->FunctionTitle,
                 "function_id" => $function->id,
-                "performance" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2),
+                "performance" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data)),
                 // "performance" => number_format((collect($priorities_data)->where('function_id', $function->id)->sum('performance')) / count($sector_data), 2)
             ];
             array_push($priorities, $priority);

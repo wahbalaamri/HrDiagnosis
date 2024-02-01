@@ -278,7 +278,7 @@
                                                 style="width: {{ $asc_perform_['performance']  }}%; font-size: 1rem;min-width: 2em;"
                                                 aria-valuenow="{{ $asc_perform_['performance']  }}" aria-valuemin="2"
                                                 aria-valuemax="100">{{
-                                                $asc_perform_['performance'] }}%
+                                                number_format($asc_perform_['performance']) }}%
                                             </div>
                                         </div>
                                         <?php $hasWPoints=true; ?>
@@ -306,13 +306,13 @@
                                         role="progressbar"
                                         style="width: {{ $asc_perform_['performance']  }}%; font-size: 1rem;min-width: 2em;"
                                         aria-valuenow="{{ $asc_perform_['performance']  }}" aria-valuemin="0"
-                                        aria-valuemax="100">{{ $asc_perform_['performance'] }}%
+                                        aria-valuemax="100">{{ number_format($asc_perform_['performance']) }}%
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                             @if ($strengthcounter==0)
-                            <span class="h5" style="font-size: 2rem"> {{ __('None') }}</span>
+                            <h5 class="h5 mt-5 pt-5" style="font-size: 2rem"> {{ __('None') }}</h5>
                             @endif
                         </div>
                     </div>
@@ -341,6 +341,12 @@
                         </div>
                     </div>
                     <div class="row row-function">
+                        <?php
+                            //sort Descending sorted_leader_performences
+                            usort($sorted_leader_performences, function ($a, $b) {
+                                return $b['performance'] <=> $a['performance'];
+                            })
+                            ?>
                         @foreach ($sorted_leader_performences as $performence)
                         <div class="col-md-3 col-sm-6 text-center function-lable">
                             {{ $performence['function'] }}
@@ -352,7 +358,7 @@
                                     style="width: {{ $performence['performance'] }}%; font-size: 1rem;min-width: 2em;"
                                     aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0"
                                     aria-valuemax="100">
-                                    {{$performence['performance'] }}%
+                                    {{(number_format($performence['performance'])) }}%
                                 </div>
                             </div>
                         </div>
@@ -375,6 +381,12 @@
                         </div>
                     </div>
                     <div class="row row-function">
+                        <?php
+                            //sort Descending sorted_hr_performences
+                            usort($sorted_hr_performences, function ($a, $b) {
+                                return $b['performance'] <=> $a['performance'];
+                            })
+                            ?>
                         @foreach ($sorted_hr_performences as $performence)
 
 
@@ -388,8 +400,7 @@
                                     style="width: {{ $performence['performance'] }}%; font-size: 1rem;min-width: 2em;"
                                     aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0"
                                     aria-valuemax="100">
-                                    {{
-                                    $performence['performance'] }}%</div>
+                                    {{(number_format($performence['performance'])) }}%</div>
                             </div>
                             {{-- @else
                             not applicable
@@ -415,6 +426,12 @@
                         </div>
                     </div>
                     <div class="row row-function">
+                        <?php
+                            //sort Descending sorted_emp_performences
+                            usort($sorted_emp_performences, function ($a, $b) {
+                                return $b['performance'] <=> $a['performance'];
+                            })
+                            ?>
                         @foreach ($sorted_emp_performences as $performence)
 
 
@@ -428,8 +445,7 @@
                                     style="width: {{ $performence['performance'] }}%; font-size: 1rem;min-width: 2em;"
                                     aria-valuenow="{{ $performence['performance'] }}" aria-valuemin="0"
                                     aria-valuemax="100">
-                                    {{
-                                    $performence['performance'] }}%</div>
+                                    {{(number_format($performence['performance'])) }}%</div>
                             </div>
                             @else
                             {{ __('not applicable') }}
@@ -490,8 +506,8 @@
                                 @if ($j == 0)
                                 <ul>
                                     @foreach ($priorities as $pri)
-                                    @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance']
-                                        <=0.5) <li class="text-white">{{ $pri['function'] }}
+                                    @if ($pri['priority'] > 80 && $pri['priority'] <= 100) @if ($pri['performance']
+                                        <=50) <li class="text-white">{{ $pri['function'] }}
                                         </li>
                                         @endif
                                         @endif
@@ -501,9 +517,9 @@
                                 <ul>
 
                                     @foreach ($priorities as $pri)
-                                    @if ($pri['priority'] >= 0.8 && $pri['priority'] <= 1) @if ($pri['performance']>
-                                        0.5
-                                        && $pri['performance'] <= 0.8) <li class="text-white">{{ $pri['function'] }}
+                                    @if ($pri['priority'] > 80 && $pri['priority'] <= 100) @if ($pri['performance']>
+                                        50
+                                        && $pri['performance'] <= 80) <li class="text-white">{{ $pri['function'] }}
                                             </li>
                                             @endif
                                             @endif
@@ -515,7 +531,7 @@
 
                                     @foreach ($priorities as $pri)
                                     ffff
-                                    @if ($pri['priority'] >0.5 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.5)
+                                    @if ($pri['priority'] >50 && $pri['priority'] <80) @if ($pri['performance'] <=50)
                                         <li class="text-white">{{ $pri['function'] }}</li>
                                         @endif
                                         @endif
@@ -527,7 +543,7 @@
                                 <ul>
 
                                     @foreach ($priorities as $pri)
-                                    @if ($pri['priority'] >0.5 && $pri['priority'] <0.8) @if ($pri['performance'] <=0.5)
+                                    @if ($pri['priority'] >50 && $pri['priority'] <80) @if ($pri['performance'] <=50)
                                         <li class="text-white">{{ $pri['function'] }}</li>
                                         @endif
                                         @endif
@@ -546,9 +562,9 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >0.5 && $pri['priority'] <0.8) @if ($pri['performance']> 0.5
+                                @if ($pri['priority'] >50 && $pri['priority'] <80) @if ($pri['performance']> 50
                                     &&
-                                    $pri['performance'] <= 0.8) <li class="text-black">{{ $pri['function'] }}</li>
+                                    $pri['performance'] <= 80) <li class="text-black">{{ $pri['function'] }}</li>
                                         @endif
                                         @endif
                                         @endforeach
@@ -559,8 +575,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] <=0.5) @if ($pri['performance'] <=0.5) <li class="text-black">
-                                    {{$pri['function'] }}</li>
+                                @if ($pri['priority'] <=50) @if ($pri['performance'] <=50) <li class="text-black">
+                                    {{$pri['function'] }} {{ $pri['performance'] }}</li>
                                     @endif
                                     @endif
                                     @endforeach
@@ -570,8 +586,8 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] <=0.5) @if ($pri['performance']> 0.5 && $pri['performance'] <=
-                                        0.8) <li class="text-black">{{ $pri['function'] }}</li>
+                                @if ($pri['priority'] <=50) @if ($pri['performance']> 50 && $pri['performance'] <=
+                                        80) <li class="text-black">{{ $pri['function'] }}</li>
                                         @endif
                                         @endif
                                         @endforeach
@@ -589,7 +605,7 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >0.8 && $pri['priority'] <= 1) @if ($pri['performance']> 0.8)
+                                @if ($pri['priority'] >80 && $pri['priority'] <= 100) @if ($pri['performance']> 80)
                                     <li class="text-white">{{ $pri['function'] }}</li>
                                     @endif
                                     @endif
@@ -602,7 +618,7 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] >0.5 && $pri['priority'] < 0.8) @if ($pri['performance']> 0.8)
+                                @if ($pri['priority'] >50 && $pri['priority'] < 80) @if ($pri['performance']> 80)
                                     <li class="text-white">{{ $pri['function'] }}
                                     </li>
                                     @endif
@@ -616,7 +632,7 @@
                             <ul>
 
                                 @foreach ($priorities as $pri)
-                                @if ($pri['priority'] <=0.5) @if ($pri['performance']> 0.8)
+                                @if ($pri['priority'] <=50) @if ($pri['performance']> 80)
                                     <li class="text-white">{{ $pri['function'] }}
                                     </li>
                                     @endif
@@ -823,7 +839,7 @@
                 <div class="m-1 " style="width: 10.4% !important; font-size: 0.8rem">
                     @foreach ($priorities as $pro)
                     @if($pro['function_id'] == $perfomr['function_id'])
-                    <div class="@if( $pro['priority']<=0.5) bg-success text-white @elseif($pro['priority']>0.5 && $pro['priority']<=0.8) bg-warning text-black @else bg-danger text-white @endif"
+                    <div class="@if( $pro['priority']<=50) bg-success text-white @elseif($pro['priority']>50 && $pro['priority']<=80) bg-warning text-black @else bg-danger text-white @endif"
                         style="border-radius: 10px;     display: flex;
     justify-content: center;
     align-content: center;
@@ -831,8 +847,8 @@
     text-align: center;
     height: 2rem;
     font-size: 1rem;">
-                        @if( $pro['priority']<=0.5) {{ __('Low') }} @elseif($pro['priority']>0.5 && $pro['priority']
-                            <=0.8) {{ __('Medium') }} @else {{ __('High') }} @endif </div>
+                        @if( $pro['priority']<=50) {{ __('Low') }} @elseif($pro['priority']>50 && $pro['priority']
+                            <=80) {{ __('Medium') }} @else {{ __('High') }} @endif </div>
 
                                 @break
                                 @endif
