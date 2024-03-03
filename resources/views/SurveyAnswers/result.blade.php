@@ -736,7 +736,7 @@
                 @endforeach
             </div>
             <div class="row">
-                <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
+                <div class="col-sm-1 m-1 text-white bg-primary" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -759,7 +759,7 @@
                 @endforeach
             </div>
             <div class="row">
-                <div class="col-sm-1 m-1 text-white bg-info" style="font-size: 0.84rem;
+                <div class="col-sm-1 m-1 text-white bg-primary" style="font-size: 0.84rem;
 
             border-radius: 10px;
             display: flex;
@@ -857,7 +857,7 @@
                     @endforeach
                 </div>
                 <div class="row">
-                    <div class="col-sm-1 m-1 bg-info" style="font-size: 0.84rem;
+                    <div class="col-sm-1 m-1 bg-primary text-white" style="font-size: 0.84rem;
     border-radius: 10px;
     display: flex;
     justify-content: center;

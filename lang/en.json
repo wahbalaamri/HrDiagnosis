@@ -272,5 +272,9 @@
     "Did you answer all questions?": "Please answer all questions",
     "Result overview - by Functions and Practices": "Result overview - by Functions and Practices",
     "None": "None",
-    "Comparison of Leadership and HR team results": "Comparison of Leadership and HR team results"
+    "Comparison of Leadership and HR team results": "Comparison of Leadership and HR team results",
+    "Please prioritize the following functions according to the business needs, in the next 1 to 2 years.": "Please prioritize the following functions according to the business needs, in the next 1 to 2 years.",
+    "Please select two high priorities, and three medium priorities, and the remaining priorities are low priorities": "Please select two high priorities, and three medium priorities, and the remaining priorities are low priorities",
+    "Did you select more than 3 low priorities?": "Did you select more than 3 low priorities?",
+    "Please select only 3 low priorities": "Please select only 3 low priorities"
 }

@@ -199,7 +199,6 @@ class SurveysController extends Controller
     //getOEQ
     public function getOEQ(Request $request, $id)
     {
-        // Log::alert("ddd");
         $openEndedQ = \App\Models\OpenEndedQuestions::where('survey_id',$id)->get();
         //set up for yajra datatable
         return DataTables::of($openEndedQ)

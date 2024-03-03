@@ -277,6 +277,10 @@
     "Did you answer all questions?": "هل أجبت على جميع الأسئلة؟",
     "Result overview - by Functions and Practices": "نظرة عامة على النتائج - حسب الوظائف والممارسات",
     "None": "لا شيء",
-    "Comparison of Leadership and HR team results": "مقارنة نتائج فريق القيادة والموارد البشرية"
+    "Comparison of Leadership and HR team results": "مقارنة نتائج فريق القيادة والموارد البشرية",
+    "Please prioritize the following functions according to the business needs, in the next 1 to 2 years.": "يرجى تصنيف الأولوية لأنشطة الموارد البشرية التالية وفقا لاحتياجاتك في السنوات من 1 إلى 2.",
+    "Please select two high priorities, and three medium priorities, and the remaining priorities are low priorities": "يرجى تحديد أولويتين عاليتين وثلاثة أولويات متوسطة، والأولويات المتبقية هي أولويات منخفضة",
+    "Did you select more than 3 low priorities?": "هل حددت أكثر من 3 أولويات منخفضة؟",
+    "Please select only 3 low priorities": "يرجى تحديد 3 أولويات منخفضة فقط"
 
 }

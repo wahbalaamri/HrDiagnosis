@@ -31,7 +31,6 @@ class StatisticsController extends Controller
         $this->id = $id;
         $this->clientID = $clientID;
         $number_all_respondent =  Emails::where('SurveyId', $id)->count();
-        Log::info($number_all_respondent);
         // $number_all_respondent = 5551;
         $number_all_respondent_answers = Cache::remember('number_all_respondent_answers', $minutes, function () use ($id) {
             return SurveyAnswers::where('SurveyId', $id)->distinct('AnsweredBy')->count();
@@ -58,7 +57,6 @@ class StatisticsController extends Controller
         $companies_ids = $companies_list->pluck('id')->all();
         //pluck departments IDs to an array
         $dep_ids = $dep_list->pluck('id')->all();
-        Log::info($dep_ids);
         //get all emails where survey id =$id and foreach sectors
         $sector_emails = [];
 

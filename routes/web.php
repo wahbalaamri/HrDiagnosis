@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemoUsersController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\EmailsController;
 use App\Http\Controllers\FunctionPracticeController;
@@ -157,6 +158,26 @@ Route::post('/service-request/store', [RequestServiceController::class, 'store']
 Route::get('/service-request/create', [RequestServiceController::class, 'create'])->name('service-request.create');
 Route::get('/service-request/add_client/{id}', [RequestServiceController::class, 'addClient'])->name('request-service.add_client')->middleware(['auth', 'role:admin']);
 Route::post('/results/saveImage', [SurveyAnswersController::class, 'saveImages'])->name('result.saveImages')->middleware(['auth', 'role:admin']);
+
+
+// =======================================================================================================================
+// =                                                                                                                     =
+// =                                                                                                                     =
+// =                                                                                                                     =
+// =                                       Start Demo Users Routes                                                       =
+// =                                                                                                                     =
+// =                                                                                                                     =
+// =                                                                                                                     =
+// =======================================================================================================================
+Route::get('/demo', [DemoUsersController::class, 'index'])->name('demo.index');
+Route::post('/demo/store', [DemoUsersController::class, 'store'])->name('demo.store');
+Route::get('/demo/survey/{id}/{type}', [DemoUsersController::class, 'survey'])->name('demo.survey');
+Route::post('/demo/saveAnswer', [DemoUsersController::class, 'saveAnswer'])->name('demo.saveAnswer');
+Route::get('/demo/result/{id}', [DemoUsersController::class, 'result'])->name('demo.result');
+Route::get('/demo/login', [DemoUsersController::class, 'login'])->name('demo.showlogin');
+Route::post('/demo/login', [DemoUsersController::class, 'login'])->name('demo.login');
+Route::post('/demo/checkOTP', [DemoUsersController::class, 'checkOTP'])->name('demo.checkOTP');
+Route::get('/demo/CP/{id}', [DemoUsersController::class, 'CP'])->name('demo.CP');
 // Route::get('/testing/migrateF', function () {
 //     Artisan::call('migrate:fresh');
 //     $dd_output = Artisan::output();

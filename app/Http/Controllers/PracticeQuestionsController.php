@@ -106,7 +106,6 @@ class PracticeQuestionsController extends Controller
     }
     public function search(Request $request)
     {
-        // Log::info($request->get('PlanID'));
         $remotePracticesQuestionArry = array();
         $search = $request->get('FunctionID');
         $ids = FunctionPractice::where('FunctionId', '=', $search)->pluck('id')->all();

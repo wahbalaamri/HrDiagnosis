@@ -132,7 +132,6 @@ class FunctionPracticeController extends Controller
     }
     public function search(Request $request)
     {
-        // Log::info($request->get('PlanID'));
         $search = $request->get('FunctionID');
         $functionPractices = FunctionPractice::where('FunctionId', '=', $search)->get();
         $remoteFunctionPractices = $this->GetremoteFunctionPractices($search);

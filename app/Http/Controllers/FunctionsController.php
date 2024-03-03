@@ -105,7 +105,6 @@ class FunctionsController extends Controller
     }
     private function GetRemotFunctions($id)
     {
-        // Log::info('GetRemotFunctions' . $id);
         $functions = array();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.hrfactoryapp.com/Admin/Functions/getFunctions?planID=$id");
@@ -135,7 +134,6 @@ class FunctionsController extends Controller
     }
     public function search(Request $request)
     {
-        // Log::info($request->get('PlanID'));
         $search = $request->get('PlanID');
         $functions = Functions::where('PlanId', '=', $search)->get();
         $remotFunctions = $this->GetRemotFunctions($search);

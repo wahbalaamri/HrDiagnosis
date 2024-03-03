@@ -9,6 +9,7 @@ use App\Http\Requests\EmailUpdateRequest;
 use App\Mail\SendSurvey;
 use App\Models\Clients;
 use App\Models\Companies;
+use App\Models\Departments;
 use App\Models\EmailContent;
 use App\Models\Emails;
 use App\Models\Sectors;
@@ -171,7 +172,6 @@ class EmailsController extends Controller
             $array = array();
             // $tss = Excel::toArray($array, $request->file('EmailFile'));
             $emails = Excel::toArray([], $request->file('EmailFile'));
-            // Log::alert($request->AddedBy);
             foreach ($emails[0] as $key => $value) {
 
                 if (str_contains($value[0], '@')) {
@@ -193,10 +193,8 @@ class EmailsController extends Controller
     }
     public function saveUploadZ(Request $request)
     {
-
         if ($request->hasFile('EmailFile')) {
-            $file = $request->file('EmailFile')->getRealPath();
-
+            // $file = $request->file('EmailFile')->getRealPath();
             // Excel::toArray([],$filePath);
             $array = array();
             // $tss = Excel::toArray($array, $request->file('EmailFile'));
@@ -206,7 +204,7 @@ class EmailsController extends Controller
                 $usr_email = null;
                 $emp_type = 0;
                 if ($key > 0) {
-
+                    // Log::info($value[3]);
                     if (str_contains($value[3], '@')) {
                         $usr_email = $value[3];
                     }
@@ -221,37 +219,66 @@ class EmailsController extends Controller
                     } else {
                         $emp_type = 1;
                     }
-                    // Log::info("Sector: " . $value[0]);
-                    // Log::info("company: " . $value[1]);
                     $company_id = null;
                     $sector_ = null;
                     $old_email = Emails::where([['Email', $usr_email], ['Mobile', $value[4]], ['ClientId', $request->get('ClientIdU')], ['SurveyId', $request->get('SurveyIdU')]])->first();
                     $sector_ = Sectors::where([['sector_name_en', 'LIKE', '%' . $value[0] . '%'], ['client_id', $request->get('ClientIdU')]])->first();
                     $company_id = $sector_ != null ? Companies::where('sector_id', $sector_->id)->where('company_name_en', 'LIKE', "%" . $value[1] . "%")->first()->id : null;
-                    if ($sector_ != null && $company_id != null) {
-                        if ($usr_email != null && $old_email != null) {
-                            $old_email->ClientId = $request->get('ClientIdU');
-                            $old_email->SurveyId = $request->get('SurveyIdU');
-                            $old_email->Email = $usr_email;
-                            $old_email->Mobile = $value[4];
-                            $old_email->sector_id = $sector_->id;
-                            $old_email->comp_id = $company_id;
-                            $old_email->dep_id = 0;
-                            $old_email->EmployeeType = $emp_type;
-                            $old_email->save();
-                        } else {
+                    $client = Clients::select('use_sections')->where('id', $request->ClientIdU)->first();
+                    if ($client->use_sections) {
+                        $dep_id = $company_id == null ? null : Departments::select('id')->where([['company_id', $company_id], ['dep_name_en', 'LIKE', '%' . $value[2] . '%']])->first()->id;
+                        if ($sector_ != null && $company_id != null && $dep_id != null) {
+                            if ($usr_email != null && $old_email != null) {
+                                $old_email->ClientId = $request->get('ClientIdU');
+                                $old_email->SurveyId = $request->get('SurveyIdU');
+                                $old_email->Email = $usr_email;
+                                $old_email->Mobile = $value[4];
+                                $old_email->sector_id = $sector_->id;
+                                $old_email->comp_id = $company_id;
+                                $old_email->dep_id = $dep_id;
+                                $old_email->EmployeeType = $emp_type;
+                                $old_email->save();
+                            } else {
 
-                            $email = new Emails();
-                            $email->ClientId = $request->get('ClientIdU');
-                            $email->SurveyId = $request->get('SurveyIdU');
-                            $email->Email = $usr_email;
-                            $email->Mobile = $value[4];
-                            $email->sector_id = $sector_->id;
-                            $email->comp_id = $company_id;
-                            $email->dep_id = 0;
-                            $email->EmployeeType = $emp_type;
-                            $email->AddedBy = Auth()->user()->id;
-                            $email->save();
+                                $email = new Emails();
+                                $email->ClientId = $request->get('ClientIdU');
+                                $email->SurveyId = $request->get('SurveyIdU');
+                                $email->Email = $usr_email;
+                                $email->Mobile = $value[4];
+                                $email->sector_id = $sector_->id;
+                                $email->comp_id = $company_id;
+                                $email->dep_id = $dep_id;
+                                $email->EmployeeType = $emp_type;
+                                $email->AddedBy = Auth()->user()->id;
+                                $email->save();
+                            }
+                        }
+                    } else {
+                        if ($sector_ != null && $company_id != null) {
+                            if ($usr_email != null && $old_email != null) {
+                                $old_email->ClientId = $request->get('ClientIdU');
+                                $old_email->SurveyId = $request->get('SurveyIdU');
+                                $old_email->Email = $usr_email;
+                                $old_email->Mobile = $value[4];
+                                $old_email->sector_id = $sector_->id;
+                                $old_email->comp_id = $company_id;
+                                $old_email->dep_id = 0;
+                                $old_email->EmployeeType = $emp_type;
+                                $old_email->save();
+                            } else {
+
+                                $email = new Emails();
+                                $email->ClientId = $request->get('ClientIdU');
+                                $email->SurveyId = $request->get('SurveyIdU');
+                                $email->Email = $usr_email;
+                                $email->Mobile = $value[4];
+                                $email->sector_id = $sector_->id;
+                                $email->comp_id = $company_id;
+                                $email->dep_id = 0;
+                                $email->EmployeeType = $emp_type;
+                                $email->AddedBy = Auth()->user()->id;
+                                $email->save();
+                            }
                         }
                     }
                 }
@@ -366,8 +393,7 @@ class EmailsController extends Controller
     }
     public function sendTheSurvey(Request $request)
     {
-        // Log::alert($request->reminder);
-        $emails =[];
+        $emails = [];
         if ($request->SectorId != null || $request->SectorId != '') {
             if ($request->reminder == 2) {
                 $emails = Emails::where('id', $request->respondentID)->get();
@@ -377,11 +403,8 @@ class EmailsController extends Controller
                 $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id], ['comp_id', $request->CompanyId]])->whereNotNull('Email')
                     ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
                     ->get();
-                // Log::info($emails);
             }
-        }
-        else
-        {
+        } else {
             if ($request->reminder == 2) {
                 $emails = Emails::where('id', $request->respondentID)->get();
             } elseif ($request->reminder == 0)
@@ -390,12 +413,9 @@ class EmailsController extends Controller
                 $emails = Emails::where([['ClientId', '=', $request->client_id], ['SurveyId', '=', $request->survey_id]])->whereNotNull('Email')
                     ->whereNotIn('id', SurveyAnswers::where('SurveyId', $request->survey_id)->distinct()->pluck('AnsweredBy')->ToArray())
                     ->get();
-                // Log::info($emails);
             }
         }
-        // Log::alert($emails);
         // foreach ($emails as $key => $value) {
-        // Log::alert($value);
         $data = [
             //         'email' => $value->Email,
             //         'id' => $value->id,
@@ -407,7 +427,6 @@ class EmailsController extends Controller
             ->delay(now()->addSeconds(2));
 
         dispatch($job);
-        // Log::alert($data);
         // sleep(2);
         // }
         return redirect()->route('clients.show', $request->client_id);

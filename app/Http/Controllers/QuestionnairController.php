@@ -53,6 +53,8 @@ class QuestionnairController extends Controller
                 }
             }
         }
+        //setLocale ar
+        App()->setLocale('ar');
         $data = [
             'functions' => $functions,
             'user_type' => $user_type,
@@ -108,7 +110,6 @@ class QuestionnairController extends Controller
                     $Priority_answer->AnsweredBy = $EmailId;
                     $Priority_answer->QuestionId = $value['functionId'];
                     $Priority_answer->AnswerValue = $value['priority'];
-                    // Log::info($Priority_answer);
                     $Priority_answer->save();
                 }
             }

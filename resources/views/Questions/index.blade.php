@@ -524,8 +524,9 @@
                                             {{-- priorities --}}
                                             @if ($can_ansewer_to_priorities)
                                             <div class="my-wizard-continar">
-                                                <p style="font-size: 2rem; letter-spacing: 2px" class="h2 text-info text-center">{{__('Please select two
-                                                    high priorities, and three medium priorities, and the remaining priorities are low priorities.')}}
+                                                <p style="font-size: 2rem; letter-spacing: 2px" class="h2 text-info text-center">
+                                                {{__('Please prioritize the following functions according to the business needs, in the next 1 to 2 years.')}}<br>
+                                                {{__('Please select two high priorities, and three medium priorities, and the remaining priorities are low priorities')}}
                                                 </p>
                                                 @foreach ( $functions as $function )
 
@@ -533,8 +534,10 @@
                                                     <legend class="mb-5 pb-5 mt-5 pt-5">{{ $loop->iteration
                                                         }}.@if(app()->getLocale()=='en')
                                                         {{$function->FunctionTitle }}
+                                                        <p>{{ $function->Description }}</p>
                                                         @elseif (app()->getLocale()=='ar')
                                                         {{$function->FunctionTitleAr }}
+                                                        <p>{{ $function->Description_ar }}</p>
                                                         @elseif (app()->getLocale()=='in')
                                                         {{$function->QuestionIn }}
                                                         @endif
@@ -1020,6 +1023,20 @@
                 e.target.checked=false;
                 let l1='{{ __("Did you select more than 3 medium priorities?") }}';
                 let l2='{{ __("Please select only 3 medium priorities") }}';
+                Swal.fire(
+                            l1,
+                            l2,
+                            'error'
+                        );
+                return;
+            }
+            //check the how many low selected
+            var low = [...form.querySelectorAll('[data-bs-priorities]:checked')].filter(input=>{return input.value=="1"});
+            if(low.length>3)
+            {
+                e.target.checked=false;
+                let l1='{{ __("Did you select more than 3 low priorities?") }}';
+                let l2='{{ __("Please select only 3 low priorities") }}';
                 Swal.fire(
                             l1,
                             l2,
