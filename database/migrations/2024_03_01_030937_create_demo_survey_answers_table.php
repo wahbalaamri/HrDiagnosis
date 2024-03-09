@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('QuestionId');
             $table->integer('AnswerValue');
             $table->string('AnsweredBy');
+            $table->integer('type');
             $table->timestamps();
         });
     }

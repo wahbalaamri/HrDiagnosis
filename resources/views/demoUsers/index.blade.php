@@ -11,6 +11,10 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('demo.store') }}">
                         @csrf
+                        {{-- show errors --}}
+                        {{-- @if ($errors->any())
+                        {!! implode('', $errors->all('<li class="text text-danger">:message</li>')) !!}
+                        @endif --}}
                         <div class="container">
                             <div class="row">
                                 {{-- Client name optional --}}
@@ -34,9 +38,16 @@
                                 <div class="form-group col-md-6 col-sm-12">
                                     <label for="client_email" class="col-form-label text-md-right">{{ __('Client Email')
                                         }}</label>
-                                    <input id="client_email" type="email" class="form-control" name="client_email"
-                                        value="{{ old('client_email') }}" required>
+                                    <input id="email" type="email" class="form-control" name="email"
+                                        value="{{ old('email') }}">
                                     <small class="form-text text-muted">{{ __('Required') }}</small>
+                                    {{-- validation --}}
+                                    @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    {{-- link to  login page if user is already logged in --}}
+                                    <br>
+                                    <a href="{{ route('demo.CPForm') }}">{{ __('You can get your linke') }}</a>
+                                    @enderror
                                 </div>
                                 {{-- Client mobile optional --}}
                                 <div class="form-group col-md-6 col-sm-12">
@@ -46,6 +57,10 @@
                                     <input id="client_mobile" type="text" class="form-control" name="client_mobile"
                                         value="{{ old('client_mobile') }}">
                                     <small class="form-text text-muted">{{ __('Optional') }}</small>
+                                    {{-- validation --}}
+                                    @error('client_mobile')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 {{-- Client country optional --}}
                                 <div class="form-group col-md-6 col-sm-12">

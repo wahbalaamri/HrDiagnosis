@@ -217,7 +217,7 @@
                                 {{-- <li><a href="/TrainingHome#learnOnline">تعلم</a> </li>
                                 <li><a href="/#consultHR">استشر</a> </li> --}}
                                 {{-- <li><a href="/Home/AboutUs">About Us</a> </li> --}}
-
+                                <li><a href="{{ route('demo.index') }}">{{ __('Demo') }}</a></li>
                             </ul>
                         </div>
                     </div>

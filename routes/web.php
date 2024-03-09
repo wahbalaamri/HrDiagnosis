@@ -178,6 +178,8 @@ Route::get('/demo/login', [DemoUsersController::class, 'login'])->name('demo.sho
 Route::post('/demo/login', [DemoUsersController::class, 'login'])->name('demo.login');
 Route::post('/demo/checkOTP', [DemoUsersController::class, 'checkOTP'])->name('demo.checkOTP');
 Route::get('/demo/CP/{id}', [DemoUsersController::class, 'CP'])->name('demo.CP');
+Route::get('/demo/CPForm', [DemoUsersController::class, 'CPForm'])->name('demo.CPForm');
+Route::post('/demo/sendMailToUser', [DemoUsersController::class, 'sendMailToUser'])->name('demo.sendMailToUser');
 // Route::get('/testing/migrateF', function () {
 //     Artisan::call('migrate:fresh');
 //     $dd_output = Artisan::output();
