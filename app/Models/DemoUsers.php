@@ -6,6 +6,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class DemoUsers extends Model
 {
@@ -31,9 +32,13 @@ class DemoUsers extends Model
     protected static function boot()
     {
         parent::boot();
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
         static::deleting(function ($user) {
             $user->demoPrioritiesAnswers()->delete();
             $user->demoSurveyAnswers()->delete();
         });
     }
+
 }

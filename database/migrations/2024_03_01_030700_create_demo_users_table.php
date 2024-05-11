@@ -19,14 +19,15 @@ return new class extends Migration
             //string for email as unique
             $table->string('email')->unique();
             // string for mobile number unique and nullable
-            $table->string('mobile')->unique()->nullable();
+            $table->string('mobile')->nullable();
             // string for name nullable
             $table->string('name')->nullable();
             // string for focal point name nullable
             $table->string('focal_point_name')->nullable();
             // string for country nullable
             $table->string('country')->nullable();
-            ///
+            //opt
+            $table->string('OPT')->nullable();
             //soft delete
             $table->softDeletes();
             $table->timestamps();
