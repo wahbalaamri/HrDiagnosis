@@ -54,7 +54,7 @@ class QuestionnairController extends Controller
             }
         }
         //setLocale ar
-        App()->setLocale('ar');
+        // App()->setLocale('ar');
         $data = [
             'functions' => $functions,
             'user_type' => $user_type,

@@ -159,7 +159,7 @@ class SurveyAnswersController extends Controller
         $Emp_score = $SurveyResult->whereIn('AnsweredBy', $employees_email)->avg('AnswerValue');
         $Leaders_score = $SurveyResult->whereIn('AnsweredBy', $leaders_email)->avg('AnswerValue');
         $_all_score = ($HR_score + $Emp_score + $Leaders_score) / 3;
-        if ($Answers_by_leaders == 0 || $Answers_by_hr == 0 )
+        if ($Answers_by_leaders == 0 || $Answers_by_hr == 0)
             return ['data_size' => 0];
         $planID = Surveys::where('id', $id)->first()->PlanId;
         $functions = Functions::where('PlanId', $planID)->select(['id', 'FunctionTitleAr', 'FunctionTitle'])->get();
@@ -482,7 +482,7 @@ class SurveyAnswersController extends Controller
             'type' => $type,
             'type_id' => $type_id,
             'entities' => null,
-            'entity' => Companies::find($type_id)->company_name_en . ' Result Company-wise'
+            'entity' => Companies::find($type_id)->company_name_en . ' '.__('Result Company-wise')
         ];
         return $data;
     }
@@ -691,13 +691,15 @@ class SurveyAnswersController extends Controller
             'type' => $type,
             'type_id' => $type_id,
             'entities' => $sector->companies,
-            'entity' => $sector->sector_name_en . ' Result Sector-wise'
+            'entity' => $sector->sector_name_en . ' '.__('Result Sector-wise')
         ];
         return $data;
     }
     function group_results($id, $type, $type_id = null)
     {
-        $sectors = Surveys::find($id)->clients->sectors;
+        $Survey = Surveys::find($id);
+        $sectors = $Survey->clients->sectors;
+        $client = $Survey->clients;
         $sector_data = [];
         foreach ($sectors as $sector) {
             $comp_d = $this->sector_results($id, 'sec', $sector->id);
@@ -899,7 +901,7 @@ class SurveyAnswersController extends Controller
             'type' => $type,
             'type_id' => $type_id,
             'entities' => $sectors,
-            'entity' => "AL-Zubair Group Result Organizational-wise"
+            'entity' => $client->ClientName ." ". __('Result Organizational-wise')
         ];
         return $data;
     }
