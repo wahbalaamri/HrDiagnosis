@@ -222,18 +222,18 @@ class EmailsController extends Controller
                     $company_id = null;
                     $sector_ = null;
                     $old_email = Emails::where([['Email', $usr_email], ['Mobile', $value[4]], ['ClientId', $request->get('ClientIdU')], ['SurveyId', $request->get('SurveyIdU')]])->first();
-                    $sector_ = Sectors::where([['sector_name_en', 'LIKE', '%' . $value[0] . '%'], ['client_id', $request->get('ClientIdU')]])->first();
-                    $company_id = $sector_ != null ? Companies::where('sector_id', $sector_->id)->where('company_name_en', 'LIKE', "%" . $value[1] . "%")->first()->id : null;
+                    $sector_id = $this->AddMissingDeps(trim($value[0]), 'sec', $request->get('ClientIdU'));
+                    $company_id = $this->AddMissingDeps(trim($value[1]), 'comp', $request->get('ClientIdU'), $sector_id);
                     $client = Clients::select('use_sections')->where('id', $request->ClientIdU)->first();
                     if ($client->use_sections) {
-                        $dep_id = $company_id == null ? null : Departments::select('id')->where([['company_id', $company_id], ['dep_name_en', 'LIKE', '%' . $value[2] . '%']])->first()->id;
-                        if ($sector_ != null && $company_id != null && $dep_id != null) {
+                        $dep_id = $this->AddMissingDeps(trim($value[2]), 'dep', $request->get('ClientIdU'), $sector_id, $company_id);
+                        if ($sector_id != null && $company_id != null && $dep_id != null) {
                             if ($usr_email != null && $old_email != null) {
                                 $old_email->ClientId = $request->get('ClientIdU');
                                 $old_email->SurveyId = $request->get('SurveyIdU');
                                 $old_email->Email = $usr_email;
                                 $old_email->Mobile = $value[4];
-                                $old_email->sector_id = $sector_->id;
+                                $old_email->sector_id = $sector_id;
                                 $old_email->comp_id = $company_id;
                                 $old_email->dep_id = $dep_id;
                                 $old_email->EmployeeType = $emp_type;
@@ -245,7 +245,7 @@ class EmailsController extends Controller
                                 $email->SurveyId = $request->get('SurveyIdU');
                                 $email->Email = $usr_email;
                                 $email->Mobile = $value[4];
-                                $email->sector_id = $sector_->id;
+                                $email->sector_id = $sector_id;
                                 $email->comp_id = $company_id;
                                 $email->dep_id = $dep_id;
                                 $email->EmployeeType = $emp_type;
@@ -260,7 +260,7 @@ class EmailsController extends Controller
                                 $old_email->SurveyId = $request->get('SurveyIdU');
                                 $old_email->Email = $usr_email;
                                 $old_email->Mobile = $value[4];
-                                $old_email->sector_id = $sector_->id;
+                                $old_email->sector_id = $sector_id;
                                 $old_email->comp_id = $company_id;
                                 $old_email->dep_id = 0;
                                 $old_email->EmployeeType = $emp_type;
@@ -272,7 +272,7 @@ class EmailsController extends Controller
                                 $email->SurveyId = $request->get('SurveyIdU');
                                 $email->Email = $usr_email;
                                 $email->Mobile = $value[4];
-                                $email->sector_id = $sector_->id;
+                                $email->sector_id = $sector_id;
                                 $email->comp_id = $company_id;
                                 $email->dep_id = 0;
                                 $email->EmployeeType = $emp_type;
@@ -508,5 +508,55 @@ class EmailsController extends Controller
     function ExportEmails($client_id, $survey_id)
     {
         return Excel::download(new RespondentsExport($client_id, $survey_id), 'Respondents.xlsx');
+    }
+    private function AddMissingDeps($name, $type, $client, $sec = null, $comp = null)
+    {
+        $return_id = 0;
+        switch ($type) {
+            case 'sec': {
+                    //find sector by sector_name_en
+                    $sector = Sectors::where('sector_name_en', "LIKE", "%" . $name . "%")->where('client_id', $client)->first();
+                    if ($sector) {
+                        $return_id = $sector->id;
+                    } else {
+                        $newSector = new Sectors();
+                        $newSector->client_id = $client;
+                        $newSector->sector_name_en = $name;
+                        $newSector->sector_name_ar = $name;
+                        $newSector->save();
+                        $return_id = $newSector->id;
+                    }
+                }
+                break;
+            case 'comp': {
+                    $company = Companies::where('sector_id', $sec)->where('company_name_en', 'like', '%' . $name . '%')->first();
+                    if ($company) {
+                        $return_id = $company->id;
+                    } else {
+                        $newCompany = new Companies();
+                        $newCompany->sector_id = $sec;
+                        $newCompany->company_name_en = $name;
+                        $newCompany->company_name_ar = $name;
+                        $newCompany->save();
+                        $return_id = $newCompany->id;
+                    }
+                }
+                break;
+            case 'dep': {
+                    $department = Departments::where('company_id', $comp)->where("dep_name_en", "LIKE", "%" . $name . "%")->first();
+                    if ($department) {
+                        $return_id = $department->id;
+                    } else {
+                        $newDepartment = new Departments();
+                        $newDepartment->dep_name_en = $name;
+                        $newDepartment->dep_name_ar = $name;
+                        $newDepartment->company_id = $comp;
+                        $newDepartment->save();
+                        $return_id = $newDepartment->id;
+                    }
+                }
+                break;
+        }
+        return $return_id;
     }
 }
